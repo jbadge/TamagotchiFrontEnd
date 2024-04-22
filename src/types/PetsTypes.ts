@@ -1,12 +1,17 @@
-export type PetsType = {
-  id: number
+export type PetType = {
+  id: number | undefined
   name: string
-  birthday: Date
+  birthday?: Date
   hungerLevel: number
   happinessLevel: number
-  lastInteractedWithDate: Date
-  idDead: boolean
+  lastInteractedWithDate?: Date
+  isDead: boolean
   playtimes: number[]
   feedings: number[]
   scoldings: number[]
+}
+
+export type PetProps = {
+  pet: PetType
+  reloadPets: () => void
 }

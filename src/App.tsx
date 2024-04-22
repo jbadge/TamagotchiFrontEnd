@@ -16,7 +16,7 @@ export function App() {
           <Route path="*" element={<p>404 - PET NOT FOUND!</p>} />
         </Routes>
       </main>
-      <footer>
+      {/* <footer>
         <section className="add-new-pet">
           <form>
             <label htmlFor="petname">Pet Name:</label>
@@ -24,7 +24,7 @@ export function App() {
             <input type="submit" value="Create"></input>
           </form>
         </section>
-      </footer>
+      </footer> */}
     </div>
   )
 }
