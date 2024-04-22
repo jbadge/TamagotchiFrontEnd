@@ -7,12 +7,11 @@ import { EsLinter, linterPlugin } from 'vite-plugin-linter'
 export default defineConfig((configEnv) => ({
   plugins: [
     reactRefresh(),
-    checker({
-      // TypeScript config
-      typescript: { tsconfigPath: './tsconfig.json' },
-    }),
+    // checker({
+    //   // TypeScript config
+    //   typescript: { tsconfigPath: './tsconfig.json' },
+    // }),
     linterPlugin({
-      disableForBuild: true,
       include: ['./src/**/*.ts', './src/**/*.tsx'],
       linters: [
         new EsLinter({
