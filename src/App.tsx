@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router'
 import PetListHome from './pages/PetListHome'
-import PetPage from './pages/PetPage'
+import PetDetails from './pages/PetDetails'
 
 export function App() {
   return (
@@ -12,7 +12,7 @@ export function App() {
       <main>
         <Routes>
           <Route path="/" element={<PetListHome />} />
-          <Route path="/pets/:id" element={<PetPage />} />
+          <Route path="/pets/:id" element={<PetDetails />} />
           <Route path="*" element={<p>404 - PET NOT FOUND!</p>} />
         </Routes>
       </main>

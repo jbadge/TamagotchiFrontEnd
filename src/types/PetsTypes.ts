@@ -1,17 +1,34 @@
 export type PetType = {
   id: number | undefined
   name: string
-  birthday?: Date
-  hungerLevel: number
-  happinessLevel: number
-  lastInteractedWithDate?: Date
+  birthday: string
+  hungerLevel: number | undefined
+  happinessLevel: number | undefined
+  lastInteractedWithDate: string
   isDead: boolean
-  playtimes: number[]
-  feedings: number[]
-  scoldings: number[]
+  playtimes: number[] | undefined
+  feedings: number[] | undefined
+  scoldings: number[] | undefined
+  spriteUrl: string
+  imageUrl: string
 }
 
 export type PetProps = {
   pet: PetType
-  reloadPets: () => void
+  imageUrl: string
+}
+
+export const EmptyPet: PetType = {
+  id: undefined,
+  name: '',
+  birthday: '',
+  hungerLevel: undefined,
+  happinessLevel: undefined,
+  lastInteractedWithDate: '',
+  isDead: false,
+  playtimes: undefined,
+  feedings: undefined,
+  scoldings: undefined,
+  spriteUrl: '',
+  imageUrl: '',
 }

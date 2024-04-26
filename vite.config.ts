@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
-import checker from 'vite-plugin-checker'
+// import checker from 'vite-plugin-checker'
 import { EsLinter, linterPlugin } from 'vite-plugin-linter'
 
 // https://vitejs.dev/config/
