@@ -19,16 +19,16 @@ export async function getPet(id: string) {
 
 // Create a pet
 export async function createPet(
-  newPetName: string
-  // spriteUrl: string,
-  // imageUrl: string
+  newPetName: string,
+  spriteUrl: string,
+  imageUrl: string
 ) {
   const response = await axios.post<PetType>(`${BASE_URL}/api/Pets/`, {
     name: newPetName,
-    // spriteUrl: spriteUrl,
-    // imageUrl: imageUrl,
+    spriteUrl: spriteUrl,
+    imageUrl: imageUrl,
   })
-  console.log('Response', response)
+  console.log('Response.data', response.data)
   return response
 }
 

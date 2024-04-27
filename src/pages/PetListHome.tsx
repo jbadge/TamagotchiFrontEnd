@@ -5,22 +5,27 @@ import useCreatePet from '../hooks/useCreatePet'
 import {
   getAllMatchingPokemon,
   getAllPokemon,
+  getPokemonImages,
   getPokemonSprites,
 } from '../pokemonPics'
 
 const PetListHome = () => {
   const [newPetName, setNewPetName] = React.useState('')
   const [newPetImage, setNewPetImage] = React.useState('')
+  const [newPetSprite, setNewPetSprite] = React.useState('')
   const [petImageForPet, setPetImageForPet] = React.useState('')
-  const [image, setImage] = React.useState('')
-  const [nameIsPokemon, setNameIsPokemon] = React.useState<string[]>([])
+
+  const [pokemonNames, setPokemonNames] = React.useState<string[]>([])
+
   const [submitted, setSubmitted] = React.useState(false)
   const [invalidUrl, setInvalidUrl] = React.useState(false)
   const [triggerEffect, setTriggerEffect] = React.useState(false)
   const [imageTouched, setImageTouched] = React.useState(false)
+
   const { pets } = useLoadPets()
   const createMutation = useCreatePet()
   const petImageRef = React.useRef<HTMLInputElement>(null)
+
   const [pokemonImages, setPokemonImages] = React.useState<
     { name: string; picture: string }[]
   >([])
@@ -33,57 +38,97 @@ const PetListHome = () => {
     }
   }
 
-  const fetchPokemonPics = async () => {
-    const pokemonNames = nameIsPokemon
+  //   images.find((image) => {
+  //     if (newPetName.toLowerCase() === image.name) {
+  //       setImage(image.picture)
+  //     } else {
+  //       setImage(newPetImage)
+  //     }
+  //   })
+  //   setPokemonImages(pokemonImages)
+  // } else if (newPetImage) {
+  //   setImage(newPetImage)
+  // }
+
+  const fetchPokemonSpritesAndImages = async () => {
     if (pokemonNames.length > 0 && newPetName) {
-      const images = await getPokemonSprites(pokemonNames)
-      images.find((image) => {
-        if (newPetName.toLowerCase() === image.name) {
-          console.log(image.picture)
-          setImage(image.picture)
+      const images = await getPokemonImages(pokemonNames)
+      const sprites = await getPokemonSprites(pokemonNames)
+
+      let foundSprite = ''
+      let foundImage = ''
+
+      // Set Sprite
+      sprites.find((pokemon) => {
+        if (newPetName.toLowerCase() === pokemon.name) {
+          foundSprite = pokemon.picture
+          return true
         } else {
-          // Responsible for image showing on page
-          console.log(newPetImage)
-          setImage(newPetImage)
+          return false
         }
       })
-      setPokemonImages(pokemonImages)
-    } else if (newPetImage) {
-      // Responsible for image showing on page
-      setImage(newPetImage)
+      setNewPetSprite(foundSprite)
+
+      // Set Image
+      images.find((pokemon) => {
+        if (newPetName.toLowerCase() === pokemon.name) {
+          foundImage = pokemon.picture
+          return true
+        } else {
+          return false
+        }
+      })
+      setNewPetImage(foundImage)
     }
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setSubmitted(true)
-    const isPokemonName = nameIsPokemon.includes(newPetName.toLowerCase())
+    const isPokemonName = pokemonNames.includes(newPetName.toLowerCase())
     const formattedName = isPokemonName
       ? newPetName.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())
       : newPetName
-    fetchPokemonPics()
-    console.log(newPetImage)
+    fetchPokemonSpritesAndImages()
+    // console.log(newPetImage)
     // if  this is a pokemon, hasImage is false
     const hasImage = !!newPetImage
     // console.log('Did you have to provide an image?', hasImage)
-    // console.log('isPokemonName', isPokemonName)
+    console.log('isPokemonName', isPokemonName)
     // console.log('!isValidUrl', !isValidUrl)
+    console.log(newPetSprite)
     if (isPokemonName || hasImage) {
       if (!isPokemonName && !isValidUrl(newPetImage)) {
         setInvalidUrl(true)
         petImageRef.current?.focus()
         return
       }
-      createMutation.mutate({
-        newPetName: formattedName,
-        // spriteUrl: newPetImage,
-        // imageUrl: newPetImage,
-      })
-      setPetImageForPet(newPetImage)
-      setNewPetName('')
-      setNewPetImage('')
-      setSubmitted(false)
-      setTriggerEffect(true)
+      if (isPokemonName && newPetSprite && newPetImage) {
+        setNewPetName(formattedName)
+      }
+      // else if (isPokemonName && newPetSprite && newPetImage) {
+      //   createMutation.mutate({
+      //     newPetName: formattedName,
+      //     spriteUrl: newPetSprite,
+      //     imageUrl: newPetImage,
+      //   })
+      //   setPetImageForPet(newPetImage)
+      //   setNewPetName('')
+      //   setNewPetImage('')
+      //   setSubmitted(false)
+      //   setTriggerEffect(true)
+      // }
+
+      // createMutation.mutate({
+      //   newPetName: formattedName,
+      //   spriteUrl: newPetImage,
+      //   imageUrl: newPetImage,
+      // })
+      // setPetImageForPet(newPetImage)
+      // setNewPetName('')
+      // setNewPetImage('')
+      // setSubmitted(false)
+      // setTriggerEffect(true)
     } else {
       petImageRef.current?.focus()
     }
@@ -91,6 +136,7 @@ const PetListHome = () => {
 
   const handleImageBlur = () => {
     setImageTouched(true)
+    console.log(imageTouched)
   }
 
   const isPetsDbEmpty = () => {
@@ -103,14 +149,25 @@ const PetListHome = () => {
     }
   }, [pets])
 
-  // React.useEffect(() => {
-  //   console.log(nameIsPokemon)
-  // }, [nameIsPokemon])
+  React.useEffect(() => {
+    if (newPetName && newPetSprite && newPetImage) {
+      createMutation.mutate({
+        newPetName: newPetName,
+        spriteUrl: newPetSprite,
+        imageUrl: newPetImage,
+      })
+      setPetImageForPet(newPetImage)
+      setNewPetName('')
+      setNewPetImage('')
+      setSubmitted(false)
+      setTriggerEffect(true)
+    }
+  }, [newPetName, newPetSprite, newPetImage])
 
   React.useEffect(() => {
     const fetchPokemonNames = async () => {
-      const pokemonNames = await getAllPokemon()
-      setNameIsPokemon(pokemonNames)
+      const tempPokemonNames = await getAllPokemon()
+      setPokemonNames(tempPokemonNames)
     }
     fetchPokemonNames()
   }, [])
@@ -128,10 +185,8 @@ const PetListHome = () => {
   }, [triggerEffect])
 
   // React.useEffect(() => {
-  //   if (petImageRef.current) {
-  //     petImageRef.current.focus()
-  //   }
-  // }, [])
+  //   console.log(submitted)
+  // }, [submitted])
 
   return (
     <section className="list-pets">
@@ -155,7 +210,7 @@ const PetListHome = () => {
                 }}
               />
             </li>
-            {submitted && !nameIsPokemon.includes(newPetName.toLowerCase()) && (
+            {submitted && !pokemonNames.includes(newPetName.toLowerCase()) && (
               <li>
                 <input
                   type="text"
@@ -169,7 +224,7 @@ const PetListHome = () => {
                   ref={petImageRef}
                   autoFocus={
                     submitted &&
-                    !nameIsPokemon.includes(newPetName.toLowerCase())
+                    !pokemonNames.includes(newPetName.toLowerCase())
                   }
                 />
                 {invalidUrl && <p className="error-message">Not a valid URL</p>}

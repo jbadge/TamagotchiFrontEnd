@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useDeletePet from '../hooks/useDeletePet'
 import useLoadPet from '../hooks/useLoadPet'
-import { getAllMatchingPokemon, getPokemonPictures } from '../pokemonPics'
+import { getAllMatchingPokemon, getPokemonImages } from '../pokemonPics'
 
 const PetDetails = () => {
   const { id } = useParams() as { id: string }
@@ -18,7 +18,7 @@ const PetDetails = () => {
     const fetchPokemon = async () => {
       const pokemonNames = await getAllMatchingPokemon()
       if (pokemonNames.length > 0 && pet.name) {
-        const images = await getPokemonPictures(pokemonNames)
+        const images = await getPokemonImages(pokemonNames)
         images.forEach((image) => {
           if (pet.name.toLowerCase() === image.name) {
             setImage(image.picture)

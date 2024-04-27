@@ -19,45 +19,35 @@ const Pet = ({
   }
 
   React.useEffect(() => {
+    // HANDLES SPRITES
     const fetchPokemon = async () => {
-      console.log('running fetchPokemon')
+      // console.log('running fetchPokemon')
       const pokemonNames = await getAllMatchingPokemon()
-      console.log('length', pokemonNames.length)
-      console.log('name', name)
+      // console.log('length', pokemonNames.length)
+      // console.log('name', name)
       if (pokemonNames.length > 0 && name) {
-        console.log('1')
+        // console.log('1')
         const images = await getPokemonSprites(pokemonNames)
         images.forEach((image) => {
           if (name.toLowerCase() === image.name) {
+            // Responsible for SPRITE showing on page
+            // console.log(image.picture)
             setImage(image.picture)
           } else {
-            // Responsible for image showing on page
+            // Responsible for SPRITE showing on page
+            // console.log(imageUrl)
             setImage(imageUrl)
           }
         })
         setPokemonImages(pokemonImages)
       } else if (imageUrl) {
-        // Responsible for image showing on page
+        // Responsible for SPRITE showing on page
+        // console.log(imageUrl)
         setImage(imageUrl)
       }
     }
     fetchPokemon()
   }, [])
-
-  //   React.useEffect(() => {
-  // if (pokemonNames.length > 0 && name) {
-  //         const images = await getPokemonSprites(pokemonNames)
-  //         images.forEach((image) => {
-  //           if (name.toLowerCase() === image.name) {
-  //             setImage(image.picture)
-  //           }
-  //         })
-  //         setPokemonImages(pokemonImages)
-  //       } else if (imageUrl) {
-  //         setImage(imageUrl)
-  //       }
-  //     }
-  //   })
 
   return (
     <li key={id} className="pet">
