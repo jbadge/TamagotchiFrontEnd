@@ -18,12 +18,16 @@ const PetListHome = () => {
   const [pokemonNames, setPokemonNames] = React.useState<string[]>([])
 
   const [submitted, setSubmitted] = React.useState(false)
-  const [invalidUrl, setInvalidUrl] = React.useState(false)
+  const [urlSubmitted, setUrlSubmitted] = React.useState(false)
+  const [invalidSpriteUrl, setInvalidSpriteUrl] = React.useState(false)
+  const [invalidImageUrl, setInvalidImageUrl] = React.useState(false)
   const [triggerEffect, setTriggerEffect] = React.useState(false)
   const [imageTouched, setImageTouched] = React.useState(false)
+  const [spriteTouched, setSpriteTouched] = React.useState(false)
 
   const { pets } = useLoadPets()
   const createMutation = useCreatePet()
+  const petSpriteRef = React.useRef<HTMLInputElement>(null)
   const petImageRef = React.useRef<HTMLInputElement>(null)
 
   const [pokemonImages, setPokemonImages] = React.useState<
@@ -31,10 +35,18 @@ const PetListHome = () => {
   >([])
 
   const isValidUrl = (urlString: string) => {
-    try {
-      return Boolean(new URL(urlString))
-    } catch (error) {
-      return false
+    if (urlString !== '') {
+      try {
+        // setUrlSubmitted(true)
+        const isValid = Boolean(new URL(urlString))
+        console.log(`URL: ${urlString} - Valid: ${isValid}`)
+        // setUrlSubmitted(true)
+        return isValid
+        // Boolean(new URL(urlString))
+      } catch (error) {
+        console.log(`URL: ${urlString} - Invalid`)
+        return false
+      }
     }
   }
 
@@ -50,37 +62,37 @@ const PetListHome = () => {
   //   setImage(newPetImage)
   // }
 
-  const fetchPokemonSpritesAndImages = async () => {
-    if (pokemonNames.length > 0 && newPetName) {
-      const images = await getPokemonImages(pokemonNames)
-      const sprites = await getPokemonSprites(pokemonNames)
+  // const fetchPokemonSpritesAndImages = async () => {
+  //   if (pokemonNames.length > 0 && newPetName) {
+  //     const images = await getPokemonImages(pokemonNames)
+  //     const sprites = await getPokemonSprites(pokemonNames)
 
-      let foundSprite = ''
-      let foundImage = ''
+  //     let foundSprite = ''
+  //     let foundImage = ''
 
-      // Set Sprite
-      sprites.find((pokemon) => {
-        if (newPetName.toLowerCase() === pokemon.name) {
-          foundSprite = pokemon.picture
-          return true
-        } else {
-          return false
-        }
-      })
-      setNewPetSprite(foundSprite)
+  //     // Set Sprite
+  //     sprites.find((pokemon) => {
+  //       if (newPetName.toLowerCase() === pokemon.name) {
+  //         foundSprite = pokemon.picture
+  //         return true
+  //       } else {
+  //         return false
+  //       }
+  //     })
+  //     setNewPetSprite(foundSprite)
 
-      // Set Image
-      images.find((pokemon) => {
-        if (newPetName.toLowerCase() === pokemon.name) {
-          foundImage = pokemon.picture
-          return true
-        } else {
-          return false
-        }
-      })
-      setNewPetImage(foundImage)
-    }
-  }
+  //     // Set Image
+  //     images.find((pokemon) => {
+  //       if (newPetName.toLowerCase() === pokemon.name) {
+  //         foundImage = pokemon.picture
+  //         return true
+  //       } else {
+  //         return false
+  //       }
+  //     })
+  //     setNewPetImage(foundImage)
+  //   }
+  // }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -89,35 +101,52 @@ const PetListHome = () => {
     const formattedName = isPokemonName
       ? newPetName.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())
       : newPetName
-    fetchPokemonSpritesAndImages()
+    // fetchPokemonSpritesAndImages()
     // console.log(newPetImage)
     // if  this is a pokemon, hasImage is false
+    const hasSprite = !!newPetSprite
     const hasImage = !!newPetImage
-    // console.log('Did you have to provide an image?', hasImage)
-    console.log('isPokemonName', isPokemonName)
+    console.log('Did you have to provide an sprite?', hasSprite)
+    console.log('Did you have to provide an image?', hasImage)
+
+    // console.log('isPokemonName', isPokemonName)
     // console.log('!isValidUrl', !isValidUrl)
-    console.log(newPetSprite)
-    if (isPokemonName || hasImage) {
-      if (!isPokemonName && !isValidUrl(newPetImage)) {
-        setInvalidUrl(true)
-        petImageRef.current?.focus()
-        return
+    // console.log(newPetSprite)
+    if (isPokemonName || hasSprite) {
+      if (!isPokemonName) {
+        if (!isValidUrl(newPetSprite)) {
+          console.log('?')
+          setInvalidSpriteUrl(true)
+          petSpriteRef.current?.focus()
+          return
+        }
+        setNewPetSprite(newPetSprite)
+        setUrlSubmitted(true)
+        console.log(!isPokemonName, !imageTouched, !isValidUrl(newPetImage))
+        if (!isPokemonName && !imageTouched && !isValidUrl(newPetImage)) {
+          console.log('!')
+          setInvalidImageUrl(true)
+          petImageRef.current?.focus()
+          return
+        }
+        setNewPetImage(newPetImage)
+        if (isPokemonName) {
+          setNewPetName(formattedName)
+          return
+        }
+        console.log('here')
       }
-      if (isPokemonName && newPetSprite && newPetImage) {
-        setNewPetName(formattedName)
-      }
-      // else if (isPokemonName && newPetSprite && newPetImage) {
-      //   createMutation.mutate({
-      //     newPetName: formattedName,
-      //     spriteUrl: newPetSprite,
-      //     imageUrl: newPetImage,
-      //   })
-      //   setPetImageForPet(newPetImage)
-      //   setNewPetName('')
-      //   setNewPetImage('')
-      //   setSubmitted(false)
-      //   setTriggerEffect(true)
-      // }
+      if (isPokemonName || (newPetName && newPetSprite && newPetImage))
+        createMutation.mutate({
+          newPetName: formattedName,
+          spriteUrl: newPetSprite,
+          imageUrl: newPetImage,
+        })
+      setPetImageForPet(newPetImage)
+      setNewPetName('')
+      setNewPetImage('')
+      setSubmitted(false)
+      setTriggerEffect(true)
 
       // createMutation.mutate({
       //   newPetName: formattedName,
@@ -134,10 +163,16 @@ const PetListHome = () => {
     }
   }
 
-  const handleImageBlur = () => {
-    setImageTouched(true)
-    console.log(imageTouched)
-  }
+  // const handleSpriteBlur = () => {
+  //   setImageTouched(true)
+  //   setUrlSubmitted(true)
+  //   // console.log(imageTouched)
+  // }
+
+  // const handleImageBlur = () => {
+  //   setImageTouched(true)
+  //   // console.log(imageTouched)
+  // }
 
   const isPetsDbEmpty = () => {
     return pets.length === 0
@@ -149,20 +184,21 @@ const PetListHome = () => {
     }
   }, [pets])
 
-  React.useEffect(() => {
-    if (newPetName && newPetSprite && newPetImage) {
-      createMutation.mutate({
-        newPetName: newPetName,
-        spriteUrl: newPetSprite,
-        imageUrl: newPetImage,
-      })
-      setPetImageForPet(newPetImage)
-      setNewPetName('')
-      setNewPetImage('')
-      setSubmitted(false)
-      setTriggerEffect(true)
-    }
-  }, [newPetName, newPetSprite, newPetImage])
+  // React.useEffect(() => {
+  //   if (newPetName && newPetSprite && newPetImage) {
+  //     console.log('yo')
+  //     createMutation.mutate({
+  //       newPetName: newPetName,
+  //       spriteUrl: newPetSprite,
+  //       imageUrl: newPetImage,
+  //     })
+  //     setPetImageForPet(newPetImage)
+  //     setNewPetName('')
+  //     setNewPetImage('')
+  //     setSubmitted(false)
+  //     setTriggerEffect(true)
+  //   }
+  // }, [newPetName, newPetSprite, newPetImage])
 
   React.useEffect(() => {
     const fetchPokemonNames = async () => {
@@ -185,8 +221,19 @@ const PetListHome = () => {
   }, [triggerEffect])
 
   // React.useEffect(() => {
-  //   console.log(submitted)
-  // }, [submitted])
+  //   console.log(urlSubmitted)
+  // }, [urlSubmitted])
+
+  function checkStates() {
+    console.log('submitted', submitted)
+    console.log('urlSubmitted', urlSubmitted)
+    console.log('invalidSpriteUrl', invalidSpriteUrl)
+    console.log('imageTouched', imageTouched)
+    console.log('invalidImageUrl', invalidImageUrl)
+    console.log('newPetName', newPetName)
+    console.log('newPetSprite', newPetSprite)
+    console.log('newPetImage', newPetImage)
+  }
 
   return (
     <section className="list-pets">
@@ -211,30 +258,55 @@ const PetListHome = () => {
               />
             </li>
             {submitted && !pokemonNames.includes(newPetName.toLowerCase()) && (
-              <li>
-                <input
-                  type="text"
-                  placeholder="Add an image from a url"
-                  value={newPetImage}
-                  onChange={(event) => {
-                    setNewPetImage(event.target.value)
-                    setInvalidUrl(false)
-                  }}
-                  onBlur={handleImageBlur}
-                  ref={petImageRef}
-                  autoFocus={
-                    submitted &&
-                    !pokemonNames.includes(newPetName.toLowerCase())
-                  }
-                />
-                {invalidUrl && <p className="error-message">Not a valid URL</p>}
-              </li>
+              <>
+                {urlSubmitted ? (
+                  <li>
+                    <input
+                      type="text"
+                      placeholder="Add an image from a url"
+                      value={newPetImage}
+                      onChange={(event) => {
+                        setNewPetImage(event.target.value)
+                        setImageTouched(event.target.value.trim() !== '') // Check if input value is not empty
+                        setInvalidImageUrl(false)
+                      }}
+                      ref={petImageRef}
+                    />
+                    {imageTouched && invalidImageUrl && (
+                      <p className="error-message">Not a valid Image URL</p>
+                    )}
+                  </li>
+                ) : (
+                  <li>
+                    <input
+                      type="text"
+                      placeholder="Add an sprite from a url"
+                      value={newPetSprite}
+                      onChange={(event) => {
+                        setNewPetSprite(event.target.value)
+                        setInvalidSpriteUrl(false)
+                      }}
+                      ref={petSpriteRef}
+                      autoFocus={
+                        !submitted ||
+                        !pokemonNames.includes(newPetName.toLowerCase())
+                      }
+                    />
+                    {invalidSpriteUrl && (
+                      <p className="error-message">Not a valid Sprite URL</p>
+                    )}
+                  </li>
+                )}
+              </>
             )}
             <li>
               <button type="submit">Add Pet</button>
             </li>
           </ul>
         </form>
+        <button onClick={checkStates} type="submit">
+          Check States
+        </button>
       </div>
     </section>
   )
