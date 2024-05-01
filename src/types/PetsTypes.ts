@@ -15,7 +15,6 @@ export type PetType = {
 
 export type PetProps = {
   pet: PetType
-  imageUrl: string
 }
 
 export const EmptyPet: PetType = {

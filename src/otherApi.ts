@@ -10,14 +10,17 @@ export async function getAllPokemon() {
   )
 }
 
-export async function getAllMatchingPokemon(name?: string) {
+export async function returnNameIfPokemonName(name?: string) {
   const response = await axios.get(
     'https://pokeapi.co/api/v2/pokemon?limit=151'
   )
-  const pokemonNames = response.data.results.map((pokemon: { name: string }) =>
-    pokemon.name.toLowerCase()
+  const pokemonNames = response.data.results.map(
+    (pokemon: { name: string }) => pokemon.name.toLowerCase() //added toLowerCase()
   )
   if (name) {
+    // console.log(pokemonNames.includes(name.toLowerCase()))
+    // console.log([name.toLowerCase()])
+    // console.log([])
     return pokemonNames.includes(name.toLowerCase()) ? [name.toLowerCase()] : []
   } else {
     const dbNames = (await getPets()).map((pet) => pet.name)
@@ -34,8 +37,8 @@ export async function getAllMatchingPokemon(name?: string) {
 
 export async function getPokemonImages(
   names: string[]
-): Promise<{ name: string; image: string }[]> {
-  const imagePictures = names.map(async (name: string) => {
+): Promise<{ name: string; picture: string }[]> {
+  const pics = names.map(async (name: string) => {
     try {
       const response = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${name}`
@@ -44,7 +47,7 @@ export async function getPokemonImages(
       if (data.sprites.other['official-artwork'].front_default) {
         return {
           name,
-          image: data.sprites.other['official-artwork'].front_default,
+          picture: data.sprites.other['official-artwork'].front_default,
         }
       } else {
         console.error(`Required data not found for ${name}`)
@@ -55,18 +58,18 @@ export async function getPokemonImages(
       return null
     }
   })
-  const images = await Promise.all(imagePictures)
-  const filteredImages = images.filter((image) => image !== null) as {
+  const pictures = await Promise.all(pics)
+  const filteredPictures = pictures.filter((picture) => picture !== null) as {
     name: string
-    image: string
+    picture: string
   }[]
-  return filteredImages
+  return filteredPictures
 }
 
 export async function getPokemonSprites(
   names: string[]
-): Promise<{ name: string; sprite: string }[]> {
-  const spritePictures = names.map(async (name: string) => {
+): Promise<{ name: string; picture: string }[]> {
+  const pics = names.map(async (name: string) => {
     try {
       const response = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${name}`
@@ -76,7 +79,10 @@ export async function getPokemonSprites(
       if (data.sprites.other['showdown'].front_default) {
         return {
           name,
-          sprite: data.sprites.versions['generation-vi']['x-y'].front_default,
+          picture:
+            data.sprites.versions['generation-vi']['omegaruby-alphasapphire']
+              .front_default,
+          // data.sprites.versions['generation-vi']['x-y'].front_default,
           // data.sprites.other['official-artwork'].front_default
           // data.sprites.other.dream_world.front_default,
           // data.sprites.front_default,
@@ -90,10 +96,26 @@ export async function getPokemonSprites(
       return null
     }
   })
-  const sprites = await Promise.all(spritePictures)
-  const filteredSprites = sprites.filter((sprite) => sprite !== null) as {
+  const pictures = await Promise.all(pics)
+  const filteredPictures = pictures.filter((picture) => picture !== null) as {
     name: string
-    sprite: string
+    picture: string
   }[]
-  return filteredSprites
+  return filteredPictures
+}
+
+export const isValidUrl = async (url: string) => {
+  try {
+    const response = await axios.head(url)
+
+    if (response.status === 200) {
+      const contentType = response.headers['content-type']
+      if (contentType && contentType.startsWith('image')) {
+        return true
+      }
+    }
+    return false
+  } catch (error) {
+    return false
+  }
 }

@@ -9,6 +9,7 @@ html {
 body {
   margin: 0;
   min-height: 100%;
+  font-family: 'Flexo-Medium', arial, sans-serif;
 }
 
 * {
@@ -17,8 +18,31 @@ body {
 }
 
 header {
+  position: relative;
   text-align: center;
   margin: 3rem;
+  color: #eb008b;
+  // font-family: 'Adventure', sans-serif;
+  // font-family: 'Chewy', system-ui;
+  // font-family: 'SF Fedora Shadow', sans-serif;
+  // font-family: 'Bubblegum Sans', sans-serif;
+  font-family: 'awe', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  // margin-bottom: 0;
+
+  h1 {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    color: #008beb;
+    font-size: 24px;
+    margin-bottom: -1.2rem;
+  }
+  h2 {
+    font-size: 5rem;
+    // transform: skewX(-5deg);
+  }
 }
 
 ul {
@@ -36,7 +60,7 @@ ul {
     display: flex;
     justify-content: space-between;
     cursor: default;
-    margin: 0.7em;
+    // margin: 0.7em;
   }
 }
 
@@ -64,53 +88,44 @@ section {
 }
 
 .breadcrumb {
+  padding-left: 10px;
   li.is-active a {
     color: #363636;
     cursor: default;
     pointer-events: none;
   }
-
   white-space: nowrap;
-
   .icon:first-child {
     margin-right: 0.5em;
   }
-
   font-size: 1rem;
   white-space: nowrap;
-
   a {
     align-items: center;
     color: #3273dc;
     display: flex;
     justify-content: center;
     padding: 0 0.75em;
-
     &:hover {
       color: #363636;
     }
   }
-
   li {
     align-items: center;
     display: flex;
-
     &:first-child a {
       padding-left: 0;
     }
-
     &.is-active a {
       color: #363636;
       cursor: default;
       pointer-events: none;
     }
-
     + li::before {
       color: #b5b5b5;
       content: '\0002f';
     }
   }
-
   ol,
   ul {
     align-items: flex-start;
@@ -118,24 +133,20 @@ section {
     flex-wrap: wrap;
     justify-content: flex-start;
   }
-
   .icon {
     &:first-child {
       margin-right: 0.5em;
     }
-
     &:last-child {
       margin-left: 0.5em;
     }
   }
-
   &.is-centered {
     ol,
     ul {
       justify-content: center;
     }
   }
-
   &.is-right {
     ol,
     ul {
@@ -161,6 +172,7 @@ span {
   display: flex;
   margin: 4rem;
   margin-top: 0;
+  padding-top: 1rem;
 }
 
 .pets {
@@ -171,7 +183,7 @@ span {
 }
 
 .pet {
-  padding: 1rem;
+  padding: 15px;
   display: flex;
   ul li:nth-child(-n + 1) {
     cursor: pointer;
@@ -180,8 +192,56 @@ span {
     display: flex;
     align-items: center;
     img {
-      max-width: 100px;
+      max-width: 120px;
+      height: auto;
+      width: 100%;
     }
+  }
+}
+
+.pet-details-name {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: -1.5rem;
+  padding: 10px;
+  padding-bottom: 2rem;
+}
+
+.pet-details-block {
+  display: flex;
+  padding: 20px;
+  // margin: 0 10rem;
+  // padding: 0 1rem;
+  .pet-details-picture {
+    flex: 1;
+    padding: 10px;
+    img {
+      background-color: #f2f2f2;
+      border-radius: 55px;
+    }
+  }
+
+  .pet-details-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    ul li {
+      font-size: 1.3rem;
+      padding: 1rem;
+    }
+    // .delete-btn {
+    //   flex-shrink: 0;
+    //   height: 30px;
+    //   width: auto;
+    //   margin-top: auto;
+    // }
+  }
+}
+
+.actions {
+  text-align: center;
+  button {
+    margin: 5px;
   }
 }
 
@@ -210,4 +270,15 @@ form {
   margin-left: -5px;
   color: red;
   white-space: nowrap;
+}
+
+.hunger-level {
+  display: block;
+  .hunger-message {
+    position: absolute;
+    display: block;
+    font-size: 16px;
+    margin-top: 0.5rem;
+    color: red;
+  }
 }

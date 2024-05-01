@@ -5,8 +5,14 @@ import { useQuery } from 'react-query'
 const useLoadPets = () => {
   // console.log('Running useLoadPets')
 
-  const { data: pets = [], refetch: refetchPets } = useQuery('pets', () =>
-    getPets()
+  const { data: pets = [], refetch: refetchPets } = useQuery(
+    'pets',
+    () => getPets(),
+    {
+      onError: (error) => {
+        console.error('An error occurred while loading pet:', error)
+      },
+    }
   )
   return React.useMemo(() => ({ pets, refetchPets }), [pets, refetchPets])
 }

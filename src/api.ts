@@ -28,7 +28,7 @@ export async function createPet(
     spriteUrl: spriteUrl,
     imageUrl: imageUrl,
   })
-  console.log('Response.data', response.data)
+
   return response
 }
 
@@ -57,6 +57,10 @@ export async function createPlaytime(id: string) {
 
 // Add a feeding for a pet
 export async function createFeeding(id: string) {
+  const petDetails = await getPet(id)
+  if (petDetails.hungerLevel! < 5) {
+    throw new Error('Cannot feed pet until it is hungry for a full meal!')
+  }
   const response = await axios.post<PetType>(
     `${BASE_URL}/api/Pets/${id}/Feedings`
   )

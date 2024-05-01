@@ -2,7 +2,6 @@ import { createPet } from '../api'
 import useLoadPets from './useLoadPets'
 import { useMutation } from 'react-query'
 
-// CURRENTLY ADDS THE ONE INPUT FOR URL TO BOTH SPRITE AND IMAGE
 const useCreatePet = () => {
   const { refetchPets } = useLoadPets()
   return useMutation(
@@ -18,6 +17,9 @@ const useCreatePet = () => {
     {
       onSuccess: function () {
         refetchPets()
+      },
+      onError: function (error) {
+        console.error('An error occurred:', error)
       },
     }
   )

@@ -1,49 +1,29 @@
 import React from 'react'
 import { PetProps } from '../types/PetsTypes'
 import { Link } from 'react-router-dom'
-import { getAllMatchingPokemon, getPokemonSprites } from '../pokemonPics'
+import { returnNameIfPokemonName, getPokemonSprites } from '../otherApi'
 
 const Pet = ({
-  pet: { id, name, birthday, hungerLevel, happinessLevel },
-  imageUrl,
+  pet: { id, name, birthday, hungerLevel, happinessLevel, spriteUrl },
 }: PetProps) => {
+  const [sprite, setSprite] = React.useState('')
   const date = new Date(birthday)
 
-  const [image, setImage] = React.useState('')
-  const [pokemonImages, setPokemonImages] = React.useState<
-    { name: string; picture: string }[]
-  >([])
-
-  if (imageUrl) {
-    console.log(imageUrl)
-  }
-
+  // HANDLES SPRITES
   React.useEffect(() => {
-    // HANDLES SPRITES
     const fetchPokemon = async () => {
-      // console.log('running fetchPokemon')
-      const pokemonNames = await getAllMatchingPokemon()
-      // console.log('length', pokemonNames.length)
-      // console.log('name', name)
+      const pokemonNames = await returnNameIfPokemonName()
       if (pokemonNames.length > 0 && name) {
-        // console.log('1')
         const images = await getPokemonSprites(pokemonNames)
         images.forEach((image) => {
           if (name.toLowerCase() === image.name) {
-            // Responsible for SPRITE showing on page
-            // console.log(image.picture)
-            setImage(image.picture)
+            setSprite(image.picture)
           } else {
-            // Responsible for SPRITE showing on page
-            // console.log(imageUrl)
-            setImage(imageUrl)
+            setSprite(spriteUrl)
           }
         })
-        setPokemonImages(pokemonImages)
-      } else if (imageUrl) {
-        // Responsible for SPRITE showing on page
-        // console.log(imageUrl)
-        setImage(imageUrl)
+      } else if (spriteUrl) {
+        setSprite(spriteUrl)
       }
     }
     fetchPokemon()
@@ -53,7 +33,7 @@ const Pet = ({
     <li key={id} className="pet">
       <div className="image-container">
         <Link to={`/pets/${id}`}>
-          <img src={image} alt="1" />
+          <img src={sprite} alt="1" />
         </Link>
       </div>
       <ul>
