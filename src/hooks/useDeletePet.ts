@@ -9,9 +9,9 @@ const useDeletePetMutation = (id: string) => {
     onSuccess: function () {
       navigate('/')
     },
-    onError: function (error) {
-      console.error('An error occurred:', error)
-    },
+    // onError: function (error) {
+    //   console.error('An error occurred:', error)
+    // },
   })
 }
 

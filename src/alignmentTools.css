@@ -1,0 +1,57 @@
+.button-text::before,
+.button-text::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 0.13px; /* Adjust the width of the marker */
+  height: 40px; /* Adjust the height of the marker */
+  background-color: black; /* Adjust the color of the marker */
+  z-index: 2;
+}
+
+.button-text::before {
+  left: 50%;
+}
+
+.button-text::after {
+  right: 50%;
+}
+.button::before {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute;
+  top: 50%; /* Position it in the middle vertically */
+  left: 50%; /* Position it in the middle horizontally */
+  width: 0.25px; /* Adjust size of the point */
+  height: 50px;
+  background-color: black; /* Point color */
+  border-radius: 1%; /* Make it round */
+  transform: translate(-50%, -50%); /* Center it precisely */
+  z-index: 1;
+}
+
+.cross-container {
+  position: relative;
+  width: 100%;
+  height: 40vh;
+}
+
+.cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 50px;
+  background-color: black;
+  transform: translate(-50%, -50%);
+}
+
+.cross::after {
+  content: '';
+  width: 50px;
+  height: 2px;
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

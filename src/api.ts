@@ -6,7 +6,7 @@ const BASE_URL = 'http://localhost:5000'
 // Get all pets
 export async function getPets() {
   const response = await axios.get<PetType[]>(`${BASE_URL}/api/Pets/`)
-
+  // console.log(response.data)
   return response.data
 }
 
@@ -40,8 +40,13 @@ export async function deletePet(id: string) {
 }
 
 // Update a pet
-export async function updatePet(id: string) {
-  const response = await axios.put<PetType>(`${BASE_URL}/api/Pets/${id}`)
+export async function updatePet(id: string, isDead: boolean) {
+  const petDetails = await getPet(id)
+  const currentPet = { ...petDetails, isDead }
+  const response = await axios.put<PetType>(
+    `${BASE_URL}/api/Pets/${id}`,
+    currentPet
+  )
 
   return response.data
 }
@@ -57,10 +62,10 @@ export async function createPlaytime(id: string) {
 
 // Add a feeding for a pet
 export async function createFeeding(id: string) {
-  const petDetails = await getPet(id)
-  if (petDetails.hungerLevel! < 5) {
-    throw new Error('Cannot feed pet until it is hungry for a full meal!')
-  }
+  // const petDetails = await getPet(id)
+  // if (petDetails.hungerLevel! < 5) {
+  //   throw new Error(`${petDetails.name} is not hungry enough to eat!`)
+  // }
   const response = await axios.post<PetType>(
     `${BASE_URL}/api/Pets/${id}/Feedings`
   )
@@ -70,9 +75,21 @@ export async function createFeeding(id: string) {
 
 // Add a scolding for a pet
 export async function createScolding(id: string) {
+  // const petDetails = await getPet(id)
+  // if (petDetails.happinessLevel! < 0) {
+  //   throw new Error(`${petDetails.name} has died from depression`)
+  // }
   const response = await axios.post<PetType>(
     `${BASE_URL}/api/Pets/${id}/Scoldings`
   )
 
+  return response.data
+}
+
+// Toggle showing dead pets
+export async function toggleItemComplete(id: string, isDead: boolean) {
+  const response = await axios.put(`${BASE_URL}/api/Pets/${id}`, {
+    pet: { complete: !isDead },
+  })
   return response.data
 }

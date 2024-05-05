@@ -8,9 +8,9 @@ const useLoadPet = (id: string) => {
     isLoading: isPetLoading,
     refetch: refetchPet,
   } = useQuery(['pet', id], () => getPet(id), {
-    onError: (error) => {
-      console.error('An error occurred while loading pet:', error)
-    },
+    // onError: (error) => {
+    //   console.error('An error occurred while loading pet:', error)
+    // },
   })
 
   return { pet, isPetLoading, refetchPet }

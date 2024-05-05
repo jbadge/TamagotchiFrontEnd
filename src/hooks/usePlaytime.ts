@@ -12,9 +12,9 @@ const usePlaytime = (id: string) => {
     onSettled: function () {
       refetchPet()
     },
-    onError: function (error) {
-      console.error('An error occurred:', error)
-    },
+    // onError: function (error) {
+    //   console.error('An error occurred:', error)
+    // },
   })
 }
 

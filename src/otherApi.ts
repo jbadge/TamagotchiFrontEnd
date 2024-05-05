@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { getPets } from './api'
 
+// 151
 export async function getAllPokemon() {
   const response = await axios.get(
-    'https://pokeapi.co/api/v2/pokemon?limit=151'
+    'https://pokeapi.co/api/v2/pokemon?limit=1025'
   )
   return response.data.results.map((pokemon: { name: string }) =>
     pokemon.name.toLowerCase()
@@ -106,6 +107,9 @@ export async function getPokemonSprites(
 
 export const isValidUrl = async (url: string) => {
   try {
+    if (url === '') {
+      return true
+    }
     const response = await axios.head(url)
 
     if (response.status === 200) {
@@ -119,3 +123,32 @@ export const isValidUrl = async (url: string) => {
     return false
   }
 }
+
+// export const searchPets = () => {
+//   const query: string = (
+//     document.querySelector('.search-input') as HTMLInputElement
+//   ).value
+
+//   fetch(`/pets/search?query=${query}`)
+//     .then((response) => response.json())
+//     .then((data: PetType[]) => {
+//       displaySearchResults(data)
+//     })
+//     .catch((error: Error) => console.error('Error searching pets:', error))
+// }
+
+// function displaySearchResults(results: PetType[]) {
+//   const searchResultsDiv = document.querySelector('.search-results')
+//   if (!searchResultsDiv) return
+
+//   searchResultsDiv.innerHTML = ''
+
+//   if (results.length === 0) {
+//     searchResultsDiv.innerHTML = 'No pets found.'
+//     return
+//   }
+
+//   results.forEach((pet) => {
+//     searchResultsDiv.innerHTML += `<div>${pet.name}</div>`
+//   })
+// }

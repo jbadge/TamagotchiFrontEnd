@@ -9,8 +9,11 @@ export function App() {
     <PokemonNamesContextProvider>
       <div className="app">
         <header>
-          <h1>THE RISE OF THE</h1>
-          <h2>TAMAGOTCHI</h2>
+          <div className="name">
+            <h1>THE RISE OF THE</h1>
+            <span className="initial">T</span>a<span className="m">m</span>agotc
+            <span className="h">h</span>i{/* <h2>TAMAGOTCHI</h2> */}
+          </div>
         </header>
         <main>
           <Routes>
