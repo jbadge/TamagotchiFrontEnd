@@ -15,7 +15,11 @@ const Pet = ({
     const fetchPokemon = async () => {
       const pokemonNames = await returnNameIfPokemonName()
       if (pokemonNames.length > 0 && name) {
+        // console.log('1')
         const images = await getPokemonSprites(pokemonNames)
+        // console.log('fetchPokemon, pokemonNames', pokemonNames)
+        // console.log('2')
+
         images.forEach((image) => {
           if (name.toLowerCase() === image.name) {
             setSprite(image.picture)

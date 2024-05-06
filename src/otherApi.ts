@@ -4,7 +4,7 @@ import { getPets } from './api'
 // 151
 export async function getAllPokemon() {
   const response = await axios.get(
-    'https://pokeapi.co/api/v2/pokemon?limit=1025'
+    'https://pokeapi.co/api/v2/pokemon?limit=1302'
   )
   return response.data.results.map((pokemon: { name: string }) =>
     pokemon.name.toLowerCase()
@@ -13,7 +13,7 @@ export async function getAllPokemon() {
 
 export async function returnNameIfPokemonName(name?: string) {
   const response = await axios.get(
-    'https://pokeapi.co/api/v2/pokemon?limit=151'
+    'https://pokeapi.co/api/v2/pokemon?limit=1302'
   )
   const pokemonNames = response.data.results.map(
     (pokemon: { name: string }) => pokemon.name.toLowerCase() //added toLowerCase()
@@ -76,6 +76,7 @@ export async function getPokemonSprites(
         `https://pokeapi.co/api/v2/pokemon/${name}`
       )
       const { data } = response
+      // console.log(data.name)
       // console.log(data.sprites)
       if (data.sprites.other['showdown'].front_default) {
         return {
@@ -87,6 +88,12 @@ export async function getPokemonSprites(
           // data.sprites.other['official-artwork'].front_default
           // data.sprites.other.dream_world.front_default,
           // data.sprites.front_default,
+        }
+      } else if (data.sprites.other['showdown'].front_default === null) {
+        // console.log('data.sprites.front_default', data.sprites.front_default)
+        return {
+          name,
+          picture: data.sprites.front_default,
         }
       } else {
         console.error(`Required data not found for ${name}`)
