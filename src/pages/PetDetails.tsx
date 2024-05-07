@@ -2,11 +2,13 @@ import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useDeletePet from '../hooks/useDeletePet'
 import useLoadPet from '../hooks/useLoadPet'
-import { returnNameIfPokemonName, getPokemonImages } from '../otherApi'
+import { getPokemonImage } from '../otherApi'
 import usePlaytime from '../hooks/usePlaytime'
 import useFeeding from '../hooks/useFeeding'
 import useScolding from '../hooks/useScolding'
 import useUpdatePet from '../hooks/useUpdatePet'
+import { usePokemonNamesContext } from '../context/PokemonNamesContext'
+import { flushSync } from 'react-dom'
 
 const PetDetails = () => {
   const { id } = useParams() as { id: string }
@@ -23,78 +25,23 @@ const PetDetails = () => {
   const [attemptScolding, setAttemptScolding] = React.useState(false)
   const updatingMutation = useUpdatePet(id)
   const bannerRef = React.useRef<HTMLDivElement>(null)
-  const pictureRef = React.useRef<HTMLDivElement>(null)
+  const imageRef = React.useRef<HTMLDivElement>(null)
   const [bannerLeft, setBannerLeft] = React.useState<string>('50%')
   const [bannerTop, setBannerTop] = React.useState<string>('0')
   const [rotation, setRotation] = React.useState<number>(0)
 
-  // const logMousePosition = (event: MouseEvent) => {
-  //   console.log('Mouse X:', event.clientX)
-  //   console.log('Mouse Y:', event.clientY)
-  // }
-
-  // // Add event listeners to log mouse position when the component mounts
+  const pokemonNamesContext = usePokemonNamesContext()
+  /////////////SIMPLEST AND
   // React.useEffect(() => {
-  //   window.addEventListener('mousemove', logMousePosition)
-  //   return () => {
-  //     window.removeEventListener('mousemove', logMousePosition)
+  //   if (bannerRef.current && pet) {
+  //     const imageWidth = bannerRef.current.parentElement?.offsetWidth || 0
+  //     const bannerWidth = bannerRef.current.offsetWidth
+  //     const rotationAngle = -20 + Math.random() * 40 // Random rotation angle between -20deg and 20deg
+  //     const translateX = (imageWidth - bannerWidth) / 2
+
+  //     bannerRef.current.style.transform = `rotate(${rotationAngle}deg) translateX(${translateX}px)`
   //   }
-  // }, [])
-
-  const handleImageLoad = () => {
-    if (pictureRef.current && bannerRef.current) {
-      const pictureWidth = pictureRef.current.offsetWidth
-      const pictureHeight = pictureRef.current.offsetHeight
-      const bannerWidth = bannerRef.current.offsetWidth
-      const bannerHeight = bannerRef.current.offsetHeight
-      // const leftOffset = (pictureWidth - bannerWidth) / 2
-      // const topOffset = pictureHeight * 0.25 - bannerHeight / 2
-      // const rotation = Math.random() * 90 - 45
-      // setBannerLeft(`${leftOffset}px`)
-      // setBannerTop(`${topOffset}px`)
-      // setRotation(rotation)
-      const centerX = pictureWidth / 2
-      const centerY = pictureHeight * 0.25
-
-      const rotationAngle = (rotation * Math.PI) / 180
-
-      const diagonal = Math.sqrt(
-        bannerWidth * bannerWidth + bannerHeight * bannerHeight
-      )
-
-      const bannerTopLeftX = centerX - (diagonal / 2) * Math.cos(rotationAngle)
-      const bannerTopLeftY = centerY - (diagonal / 2) * Math.sin(rotationAngle)
-
-      const adjustedLeft =
-        bannerTopLeftX - (rotationAngle < Math.PI / 2 ? 0 : bannerWidth)
-      const adjustedTop =
-        bannerTopLeftY - (rotationAngle < Math.PI ? 0 : bannerHeight)
-
-      const topEdgeOffset = Math.max(0, centerY - adjustedTop)
-
-      const topEdgeOfImageDivY = pictureRef.current.getBoundingClientRect().top
-
-      const finalTopPosition = Math.max(
-        topEdgeOfImageDivY,
-        adjustedTop + topEdgeOffset
-      )
-
-      setBannerLeft(`${adjustedLeft}px`)
-      setBannerTop(`${finalTopPosition}px`)
-      setRotation(rotation)
-
-      // console.log('Top edge of image:', centerY)
-      // console.log('Top-left edge of banner:', bannerTopLeftY)
-      const imageRect = pictureRef.current.getBoundingClientRect()
-      const bannerRect = bannerRef.current.getBoundingClientRect()
-
-      // Log the positions of the image and the banner
-      console.log('Actual top edge of image:', imageRect.top)
-      console.log('Actual left edge of image:', imageRect.left)
-      console.log('Actual top-left edge of banner:', bannerRect.top)
-      console.log('Actual left edge of banner:', bannerRect.left)
-    }
-  }
+  // }, [pet])
 
   const handleFeedClick = async () => {
     try {
@@ -122,8 +69,8 @@ const PetDetails = () => {
     refetchPet()
   }
 
-  // Check hungerlevel < 5
   React.useEffect(() => {
+    // Check hungerlevel < 5
     if (pet.hungerLevel !== undefined && pet.hungerLevel > 5) {
       setAttemptFeeding(false)
     }
@@ -138,99 +85,136 @@ const PetDetails = () => {
     // }
   }, [pet])
 
-  // fetchPokemonm
   React.useEffect(() => {
+    // fetch Pokemon
     const fetchPokemon = async () => {
-      const pokemonName = await returnNameIfPokemonName()
+      const name = pet.name.toLowerCase()
+      const petIsPokemon: boolean =
+        pokemonNamesContext.pokemonNames.includes(name)
 
-      if (pokemonName.length > 0 && pet.name) {
-        const images = await getPokemonImages(pokemonName)
-        images.forEach((image) => {
-          if (pet.name.toLowerCase() === image.name) {
-            setImage(image.picture)
-          }
-        })
-        setImage(pet.imageUrl)
+      if (petIsPokemon && pet.name) {
+        const images = await getPokemonImage(pet.name)
+        setImage(images.picture)
       }
       setImage(pet.imageUrl)
     }
     fetchPokemon()
   }, [pet])
 
-  /////////////SIMPLEST AND
+  const handleImageLoad = () => {
+    if (imageRef.current && bannerRef.current) {
+      const imageWidth = imageRef.current.offsetWidth
+      const imageHeight = imageRef.current.offsetHeight
+      const bannerWidth1 = bannerRef.current.offsetWidth
+      const bannerHeight = bannerRef.current.offsetHeight
+
+      // Random rotation angle between -20deg and 20deg
+      const rotationAngle =
+        (Math.random() < 0.5 ? 1 : -1) * (10 + Math.random() * 10)
+
+      // Calculate the positioning for the banner
+      // Position the banner at 10% of the image height from the top
+      const bannerTop1 = imageHeight - bannerHeight
+      const bannerTop =
+        Math.abs(rotationAngle) > 10 && Math.abs(rotationAngle) < 12
+          ? imageHeight - bannerTop1 - 15
+          : imageHeight - bannerTop1
+      const b = imageWidth
+      console.log('rotationAngle', rotationAngle)
+      const cosA = Math.cos(rotationAngle)
+      const bannerWidth = imageWidth / cosA
+      const bannerLeft = rotationAngle > 0 ? 10 : -10 // Center the banner horizontally
+      console.log('A', rotationAngle, 'cos(A)', cosA)
+      const c = b / cosA
+      const absC = Math.abs(b / cosA)
+      const a = Math.sqrt(c * c - b * b)
+      console.log('b', b)
+      console.log('c', c)
+      console.log('a', a)
+      console.log('absolute val c', absC)
+      console.log('halfsies', c / 2 - a)
+      // Set the rotation and positioning for the banner
+      setBannerLeft(`${bannerLeft}px`)
+      setBannerTop(`${bannerTop}px`)
+      setRotation(rotationAngle)
+      console.log('bannerRef', bannerRef)
+      console.log('imageWidth', imageWidth)
+      console.log('imageHeight', imageHeight)
+      console.log('bannerWidth1', bannerWidth1)
+      console.log('bannerWidth', bannerWidth)
+
+      console.log('bannerHeight', bannerHeight)
+      // console.log('rotationAngle', rotationAngle)
+      // console.log('bannerLeft', bannerLeft)
+      console.log('bannerTop', bannerTop)
+    }
+  }
+
   // React.useEffect(() => {
-  //   if (bannerRef.current && pet) {
-  //     const imageWidth = bannerRef.current.parentElement?.offsetWidth || 0
+  //   console.log('bannerRef', bannerRef)
+  //   console.log('bannerLeft', bannerLeft)
+  //   console.log('bannerTop', bannerTop)
+  // }, [bannerTop, bannerLeft])
+
+  React.useEffect(() => {
+    // Trigger handleImageLoad when the image and banner are loaded
+    handleImageLoad()
+  }, [imageRef, bannerRef]) // Update when pictureRef, bannerRef, or rotation changes
+
+  // hdujha
+  // const handleImageLoad = () => {
+  //   if (pictureRef.current && bannerRef.current) {
+  //     const pictureWidth = pictureRef.current.offsetWidth
+  //     const pictureHeight = pictureRef.current.offsetHeight
   //     const bannerWidth = bannerRef.current.offsetWidth
-  //     const rotationAngle = -20 + Math.random() * 40 // Random rotation angle between -20deg and 20deg
-  //     const translateX = (imageWidth - bannerWidth) / 2
+  //     const bannerHeight = bannerRef.current.offsetHeight
+  //     const centerX = pictureWidth / 2
+  //     const centerY = pictureHeight * 0.25
+  //     const rotationAngle = (rotation * Math.PI) / 180
+  //     const diagonal = Math.sqrt(
+  //       bannerWidth * bannerWidth + bannerHeight * bannerHeight
+  //     )
+  //     const bannerTopLeftX = centerX - (diagonal / 2) * Math.cos(rotationAngle)
+  //     const bannerTopLeftY = centerY - (diagonal / 2) * Math.sin(rotationAngle)
+  //     const adjustedLeft =
+  //       bannerTopLeftX - (rotationAngle < Math.PI / 2 ? 0 : bannerWidth)
+  //     const adjustedTop =
+  //       bannerTopLeftY - (rotationAngle < Math.PI ? 0 : bannerHeight)
+  //     const topEdgeOffset = Math.max(0, centerY - adjustedTop)
+  //     const topEdgeOfImageDivY = pictureRef.current.getBoundingClientRect().top
+  //     const finalTopPosition = Math.max(
+  //       topEdgeOfImageDivY,
+  //       adjustedTop + topEdgeOffset
+  //     )
 
-  //     bannerRef.current.style.transform = `rotate(${rotationAngle}deg) translateX(${translateX}px)`
+  //     setBannerLeft(`${adjustedLeft}px`)
+  //     setBannerTop(`${finalTopPosition}px`)
+  //     setRotation(rotation)
   //   }
-  // }, [pet])
+  // }
 
-  ///////////////////BOTTOM
   // React.useEffect(() => {
+  //   // Banner Stuff
   //   if (pet && bannerRef.current) {
   //     const parentElement = bannerRef.current.parentElement
   //     if (parentElement) {
   //       const imageWidth = parentElement.offsetWidth || 0
   //       const bannerWidth = bannerRef.current.offsetWidth
-  //       const rotationAngle = -20 + Math.random() * 40 // Random rotation angle between -20deg and 20deg
-
-  //       // Calculate the translateX to center the banner
+  //       const rotationAngle = -20 + Math.random() * 40
+  //       const petDetailsBlock = document.querySelector(
+  //         '.pet-details-block'
+  //       ) as HTMLElement | null
+  //       const petDetailsBlockTop = petDetailsBlock
+  //         ? petDetailsBlock.getBoundingClientRect().top
+  //         : 0
+  //       const bannerTopRelativeToBlock =
+  //         bannerRef.current.getBoundingClientRect().top - petDetailsBlockTop
   //       const translateX = (imageWidth - bannerWidth) / 2
-
-  //       // Get the top position of the pet-details-block
-  //       const petDetailsBlockTop =
-  //         parentElement
-  //           .querySelector('.pet-details-block')
-  //           ?.getBoundingClientRect().top || 0
-
-  //       // Calculate the translateYAdjusted to ensure the top edge of the banner aligns with the top edge of the pet-details-block
-  //       const bannerTop = bannerRef.current.getBoundingClientRect().top
-  //       const translateYAdjusted = bannerTop - petDetailsBlockTop
-
-  //       bannerRef.current.style.transform = `rotate(${rotationAngle}deg) translate(${translateX}px, ${translateYAdjusted}px)`
+  //       const translateY = -bannerTopRelativeToBlock
+  //       bannerRef.current.style.transform = `rotate(${rotationAngle}deg) translate(${translateX}px, ${translateY}px)`
   //     }
   //   }
   // }, [pet])
-
-  React.useEffect(() => {
-    // Banner Stuff
-    // still not working. though apparently, some of it being set to the correct position had to do with a useeffect i had not commented out, either. here is that useeffect that was somehow also
-    // console.log(pet)
-    // console.log(bannerRef.current?.parentElement)
-
-    if (pet && bannerRef.current) {
-      const parentElement = bannerRef.current.parentElement
-      if (parentElement) {
-        const imageWidth = parentElement.offsetWidth || 0
-        const bannerWidth = bannerRef.current.offsetWidth
-        const rotationAngle = -20 + Math.random() * 40 // Random rotation angle between -20deg and 20deg
-
-        // Get the top position of the pet-details-block
-        const petDetailsBlock = document.querySelector(
-          '.pet-details-block'
-        ) as HTMLElement | null
-        const petDetailsBlockTop = petDetailsBlock
-          ? petDetailsBlock.getBoundingClientRect().top
-          : 0
-
-        // Get the top position of the banner relative to the pet-details-block
-        const bannerTopRelativeToBlock =
-          bannerRef.current.getBoundingClientRect().top - petDetailsBlockTop
-
-        // Calculate the translateY to ensure the top edge of the banner stays within the boundaries of the pet-details-block
-        const translateY = -bannerTopRelativeToBlock
-
-        // Calculate the translateX to center the banner
-        const translateX = (imageWidth - bannerWidth) / 2
-
-        bannerRef.current.style.transform = `rotate(${rotationAngle}deg) translate(${translateX}px, ${translateY}px)`
-      }
-    }
-  }, [pet])
 
   if (isPetLoading) {
     return null
@@ -238,8 +222,6 @@ const PetDetails = () => {
 
   return (
     <section>
-      {/* <div className="cross-container">
-        <div className="cross"></div> */}
       <div className="pet-container">
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
@@ -286,7 +268,7 @@ const PetDetails = () => {
                   marginLeft: '-50%',
                 }}
               > */}
-          <div className="pet-details-picture" ref={pictureRef}>
+          <div className="pet-details-picture" ref={imageRef}>
             <img
               src={image}
               alt={`Picture of ${pet.name}`}

@@ -1,7 +1,7 @@
 import React from 'react'
 import useCreatePet from '../hooks/useCreatePet'
 import { usePokemonNamesContext } from '../context/PokemonNamesContext'
-import { getPokemonImages, getPokemonSprites, isValidUrl } from '../otherApi'
+import { getPokemonImage, getPokemonSprite, isValidUrl } from '../otherApi'
 
 const CreatePetForm = () => {
   const createMutation = useCreatePet()
@@ -30,18 +30,18 @@ const CreatePetForm = () => {
 
   const fetchPokemonSpritesAndImages = async () => {
     if (newPetName) {
-      const sprites = await getPokemonSprites(pokemonNames)
-      const images = await getPokemonImages(pokemonNames)
-
+      // const sprites = await getPokemonSprites(pokemonNames)
+      // const images = await getPokemonImages(pokemonNames)
+      const foundImage = (await getPokemonImage(newPetName)).picture
       // Set Sprite
-      const foundSprite =
-        sprites.find((pokemon) => newPetName.toLowerCase() === pokemon.name)
-          ?.picture || ''
+      const foundSprite = (await getPokemonSprite(newPetName)).picture
+      // sprites.find((pokemon) => newPetName.toLowerCase() === pokemon.name)
+      //   ?.picture || ''
 
       // Set Image
-      const foundImage =
-        images.find((pokemon) => newPetName.toLowerCase() === pokemon.name)
-          ?.picture || ''
+      // const foundImage =
+      //   images.find((pokemon) => newPetName.toLowerCase() === pokemon.name)
+      //     ?.picture || ''
 
       // Validate Urls
       const isValidSprite = await isValidUrl(foundSprite)

@@ -12,7 +12,7 @@ export function App() {
           <div className="name">
             <h1>THE RISE OF THE</h1>
             <span className="initial">T</span>a<span className="m">m</span>agotc
-            <span className="h">h</span>i{/* <h2>TAMAGOTCHI</h2> */}
+            <span className="h">h</span>i
           </div>
         </header>
         <main>

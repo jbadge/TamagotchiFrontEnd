@@ -19,7 +19,7 @@ const SearchPetForm: React.FC<SearchPetFormProps> = ({ onSearchChange }) => {
           placeholder="Search pets..."
           onChange={handleChange}
         />
-        <button type="submit">Search</button>
+        {/* <button type="submit">Search</button> */}
       </div>
       <div id="search-results"></div>
     </div>
