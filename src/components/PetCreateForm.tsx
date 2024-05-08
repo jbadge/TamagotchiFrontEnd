@@ -12,11 +12,12 @@ const CreatePetForm = () => {
   const [newPetSprite, setNewPetSprite] = React.useState('')
 
   const [submitted, setSubmitted] = React.useState(false)
-  const [urlSubmitted, setUrlSubmitted] = React.useState(false)
+  const [spriteUrlValid, setSpriteUrlValid] = React.useState(false)
   const [trySubmitSprite, setTrySubmitSprite] = React.useState(false)
   const [trySubmitImage, setTrySubmitImage] = React.useState(false)
 
   const [invalidName, setInvalidName] = React.useState(false)
+  // const [isPokemonName, setIsPokemonName] = React.useState(false)
   const [isValidSpriteUrl, setIsValidSpriteUrl] = React.useState(false)
   const [isValidImageUrl, setIsValidImageUrl] = React.useState(false)
 
@@ -28,17 +29,23 @@ const CreatePetForm = () => {
   const petSpriteRef = React.useRef<HTMLInputElement>(null)
   const petImageRef = React.useRef<HTMLInputElement>(null)
 
-  const fetchPokemonSpritesAndImages = async () => {
-    if (newPetName) {
+  let isPokemonName = false
+  let spriteCheck = false
+  let imageCheck = false
+
+  const fetchPokemonSpritesAndImages = async (newPetId?: string) => {
+    const value = newPetId || newPetName
+    if (value) {
       // Set Sprite
-      const foundSprite = (await getPokemonSprite(newPetName)).picture
+      const foundSprite = (await getPokemonSprite(value)).picture
 
       // Set Image
-      const foundImage = (await getPokemonImage(newPetName)).picture
+      const foundImage = (await getPokemonImage(value)).picture
 
       // Validate Urls
       const isValidSprite = await isValidUrl(foundSprite)
       const isValidImage = await isValidUrl(foundImage)
+
       if (isValidSprite) {
         setIsValidSpriteUrl(true)
       }
@@ -48,14 +55,27 @@ const CreatePetForm = () => {
 
       setNewPetSprite(foundSprite)
       setNewPetImage(foundImage)
-      setNewPetName(
-        newPetName.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())
-      )
+      if (isPokemonName) {
+        setNewPetName(
+          newPetName
+            .toLowerCase()
+            .replace(/\b\w/g, (char) => char.toUpperCase())
+        )
+      }
     }
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (submitted && !spriteUrlValid) {
+      setSpriteTouched(true)
+      spriteCheck = true
+    }
+
+    if (spriteUrlValid) {
+      setImageTouched(true)
+      imageCheck = true
+    }
 
     if (!newPetName.trim()) {
       setInvalidName(true)
@@ -65,30 +85,36 @@ const CreatePetForm = () => {
     }
     setSubmitted(true)
 
-    const isPokemonName = pokemonNames.includes(newPetName.toLowerCase())
-
+    isPokemonName = pokemonNames.includes(newPetName.toLowerCase())
     // Get Sprites and Images for Pokemon Name
     if (isPokemonName) {
+      isPokemonName = true
       fetchPokemonSpritesAndImages()
+      spriteCheck = true
+      imageCheck = true
     }
 
-    if (!spriteTouched && !imageTouched) {
+    if (!spriteCheck && !imageCheck) {
       return
     }
 
     if (!isPokemonName) {
-      const isValidSprite = await isValidUrl(newPetSprite)
-      if (spriteTouched && !isValidSprite) {
-        setIsValidSpriteUrl(false)
-        setTrySubmitSprite(true)
-        petSpriteRef.current?.focus()
-        return
+      // Make sure sprite is valid, allows immediate return
+      if (spriteCheck) {
+        const isValidSprite = await isValidUrl(newPetSprite)
+        if (spriteTouched && !isValidSprite) {
+          setIsValidSpriteUrl(false)
+          setTrySubmitSprite(true)
+          petSpriteRef.current?.focus()
+          return
+        }
+        setSpriteUrlValid(true)
+        setIsValidSpriteUrl(true)
+        setTrySubmitSprite(false)
       }
-      setUrlSubmitted(true)
-      setIsValidSpriteUrl(true)
-      setTrySubmitSprite(false)
 
-      if (newPetImage.trim() !== '' || imageTouched) {
+      // Make sure image is valid, allows immediate return
+      if (imageCheck) {
         const isValidImage = await isValidUrl(newPetImage)
         if (imageTouched && !isValidImage) {
           setTrySubmitImage(true)
@@ -96,8 +122,14 @@ const CreatePetForm = () => {
           petImageRef.current?.focus()
           return
         }
-        if (isValidImage) {
-          setIsValidImageUrl(true)
+        // Grab random image and sprite for empty urls
+        if (newPetSprite === '' && newPetImage === '') {
+          let x = Math.floor(Math.random() * 1151) + 152
+          fetchPokemonSpritesAndImages(String(x))
+        } else {
+          if (isValidImage) {
+            setIsValidImageUrl(true)
+          }
         }
       }
     }
@@ -114,7 +146,7 @@ const CreatePetForm = () => {
       setNewPetSprite('')
       setNewPetImage('')
       setSubmitted(false)
-      setUrlSubmitted(false)
+      setSpriteUrlValid(false)
       setInvalidName(false)
       setIsValidSpriteUrl(false)
       setIsValidImageUrl(false)
@@ -141,7 +173,6 @@ const CreatePetForm = () => {
                   setSubmitted(false)
                 }}
                 ref={petNameRef}
-                // onFocus={() => setNameTouched(true)}
               />
               {invalidName && (
                 <p className="error-message">Your pet must have a name!</p>
@@ -152,7 +183,7 @@ const CreatePetForm = () => {
         {submitted && !pokemonNames.includes(newPetName.toLowerCase()) && (
           <li>
             <ul className="input-container">
-              {!urlSubmitted ? (
+              {!spriteUrlValid ? (
                 <li>
                   <input
                     type="text"
@@ -189,7 +220,7 @@ const CreatePetForm = () => {
                       setImageTouched(true)
                     }}
                     ref={petImageRef}
-                    autoFocus={!urlSubmitted && submitted}
+                    autoFocus={!spriteUrlValid && submitted}
                     onKeyDown={() => {
                       setImageTouched(true)
                     }}
@@ -205,6 +236,7 @@ const CreatePetForm = () => {
         <li>
           <button type="submit">Add Pet</button>
         </li>
+        <li></li>
       </ul>
     </form>
   )

@@ -99,7 +99,7 @@ const PetListHome = () => {
 
   // Toggle on/off results displaying dead pets
   const toggleFilterDeadPets = () => {
-    setShowDeadPets((prevFilterDeadPets) => !prevFilterDeadPets)
+    setShowDeadPets((prevShowDeadPets) => !prevShowDeadPets)
   }
 
   // Updates filtered list when the search field is used
