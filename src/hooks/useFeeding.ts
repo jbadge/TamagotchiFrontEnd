@@ -12,9 +12,6 @@ const useFeeding = (id: string) => {
     onSettled: function () {
       refetchPet()
     },
-    // onError: function (error) {
-    //   console.error('An error occurred:', error)
-    // },
   })
 }
 

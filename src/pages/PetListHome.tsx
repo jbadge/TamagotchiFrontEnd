@@ -6,116 +6,125 @@ import SearchPetForm from '../components/SearchPetForm'
 import { PetType } from '../types/PetsTypes'
 
 const PetListHome = () => {
-  const { pets } = useLoadPets()
+  const { pets, isPetsLoading } = useLoadPets()
   const [searchQuery, setSearchQuery] = React.useState<string>('')
-  const [filteredPets, setFilteredPets] = React.useState<PetType[]>(pets)
+  const [filteredPets, setFilteredPets] = React.useState<PetType[]>([])
   const [showDeadPets, setShowDeadPets] = React.useState<boolean>(false)
-  const [sortBy, setSortBy] = React.useState<string>('name')
+  const [sortBy, setSortBy] = React.useState<string>('default')
 
   // Search
   const handleSearchChange = (query: string) => {
     setSearchQuery(query)
-    console.log('query', searchQuery)
-    if (query === '') {
-      setFilteredPets(pets)
-    } else {
-      const results = pets.filter((pet) =>
-        pet.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-      )
-      setFilteredPets(results)
-
-      const filtered = pets.filter((pet) =>
-        pet.name.toLowerCase().startsWith(query.toLowerCase())
-      )
-      setFilteredPets(
-        showDeadPets ? filtered.filter((pet) => !pet.isDead) : filtered
-      )
-    }
+    const filtered = pets.filter((pet) =>
+      pet.name.toLowerCase().startsWith(query.toLowerCase())
+    )
+    setFilteredPets(
+      showDeadPets ? filtered.filter((pet) => !pet.isDead) : filtered
+    )
   }
 
   // Sort
   const handleSortChange = (criteria: string) => {
     setSortBy(criteria)
-    const sortedPets = [...filteredPets]
-    // Name
-    if (criteria === 'name') {
-      // Sort by name A-Z
-      sortedPets.sort((currentPet, nextPet) =>
-        currentPet.name.localeCompare(nextPet.name)
-      )
-    } else if (criteria === 'name-desc') {
-      // Sort by name Z-A
-      sortedPets.sort((currentPet, nextPet) =>
-        nextPet.name.localeCompare(currentPet.name)
-      )
+
+    if (criteria !== 'default') {
+      const sortedPets = [...filteredPets]
+      // Name
+      if (criteria === 'name' || criteria === 'name-desc') {
+        sortedPets.sort((currentPet, nextPet) => {
+          if (currentPet.name !== undefined && nextPet.name !== undefined) {
+            return criteria === 'name'
+              ? // Sort by name A-Z
+                currentPet.name.localeCompare(nextPet.name)
+              : // Sort by name Z-A
+                nextPet.name.localeCompare(currentPet.name)
+          }
+          return 0
+        })
+      }
+      // Hunger Level
+      if (criteria === 'hunger-level' || criteria === 'hunger-level-desc') {
+        sortedPets.sort((currentPet, nextPet) => {
+          if (
+            currentPet.hungerLevel !== undefined &&
+            nextPet.hungerLevel !== undefined
+          ) {
+            return criteria === 'hunger-level'
+              ? // Sort by Hunger Level, ascending
+                currentPet.hungerLevel - nextPet.hungerLevel
+              : // Sort by Hunger Level, descending
+                nextPet.hungerLevel - currentPet.hungerLevel
+          }
+          return 0
+        })
+      }
+      // Happiness Level
+      if (
+        criteria === 'happiness-level' ||
+        criteria === 'happiness-level-desc'
+      ) {
+        sortedPets.sort((currentPet, nextPet) => {
+          if (
+            currentPet.happinessLevel !== undefined &&
+            nextPet.happinessLevel !== undefined
+          ) {
+            return criteria === 'happiness-level'
+              ? // Sort by Happiness Level, ascending
+                currentPet.happinessLevel - nextPet.happinessLevel
+              : // Sort by Happiness Level, descending
+                nextPet.happinessLevel - currentPet.happinessLevel
+          }
+          return 0
+        })
+      }
+      // ID (default)
+      if (criteria === 'id-asc' || criteria === 'id-desc') {
+        sortedPets.sort((currentPet, nextPet) => {
+          if (currentPet.id !== undefined && nextPet.id !== undefined) {
+            return criteria === 'id-asc'
+              ? // Sort by ID, ascending
+                currentPet.id - nextPet.id
+              : // Sort by ID, ascending
+                nextPet.id - currentPet.id
+          }
+          return 0
+        })
+      }
+
+      setFilteredPets(sortedPets)
+    } else {
+      setFilteredPets([...pets])
     }
-    // Hunger Level
-    if (criteria === 'hunger-level' || criteria === 'hunger-level-desc') {
-      // Sort by Happiness Level, ascending
-      sortedPets.sort((currentPet, nextPet) => {
-        if (
-          currentPet.hungerLevel !== undefined &&
-          nextPet.hungerLevel !== undefined
-        ) {
-          return criteria === 'hunger-level'
-            ? currentPet.hungerLevel - nextPet.hungerLevel
-            : nextPet.hungerLevel - currentPet.hungerLevel
-        }
-        return 0
-      })
-    }
-    // Happiness Level
-    if (criteria === 'happiness-level' || criteria === 'happiness-level-desc') {
-      // Sort by Happiness Level, ascending
-      sortedPets.sort((currentPet, nextPet) => {
-        if (
-          currentPet.happinessLevel !== undefined &&
-          nextPet.happinessLevel !== undefined
-        ) {
-          return criteria === 'happiness-level'
-            ? currentPet.happinessLevel - nextPet.happinessLevel
-            : nextPet.happinessLevel - currentPet.happinessLevel
-        }
-        return 0
-      })
-    }
-    // } else if (criteria === 'happiness-level-desc') {
-    //   // Sort by Happiness Level, descending
-    //   sortedPets.sort(
-    //     (currentPet, nextPet) => nextPet.happinessLevel - currentPet.happinessLevel
-    //   )
-    // }
-    setFilteredPets(sortedPets)
   }
 
   // Toggle on/off results displaying dead pets
   const toggleFilterDeadPets = () => {
-    // console.log('filterDeadPets', filterDeadPets)
-    // console.log('pets', pets)
     setShowDeadPets((prevFilterDeadPets) => !prevFilterDeadPets)
   }
 
-  // Toggle on/off results displaying dead pets
-  // const toggleFilterDeadPets = () => {
-  //   setFilterDeadPets(!filterDeadPets)
-  // }
-
-  // React.useEffect(() => {
-  //   setFilteredPets(pets)
-  //   setFilteredPets(pets.filter((pet) => !showDeadPets || !pet.isDead))
-  //   console.log(filteredPets)
-  // }, [pets, showDeadPets])
-
   // Updates filtered list when the search field is used
   React.useEffect(() => {
-    let filtered = pets.filter((pet) => showDeadPets || !pet.isDead)
-    if (searchQuery) {
-      filtered = filtered.filter((pet) =>
-        pet.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-      )
+    if (!isPetsLoading) {
+      let filtered = pets.filter((pet) => showDeadPets || !pet.isDead)
+      if (searchQuery) {
+        filtered = filtered.filter((pet) =>
+          pet.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+        )
+      }
+      setFilteredPets(filtered)
     }
-    setFilteredPets(filtered)
-  }, [pets, showDeadPets, searchQuery])
+  }, [showDeadPets, searchQuery])
+
+  // Initial Load
+  React.useEffect(() => {
+    if (!isPetsLoading) {
+      setFilteredPets([...pets])
+    }
+  }, [pets])
+
+  if (isPetsLoading) {
+    return null
+  }
 
   return (
     <section className="pet-list-container">
@@ -127,6 +136,7 @@ const PetListHome = () => {
               value={sortBy}
               onChange={(event) => handleSortChange(event.target.value)}
             >
+              <option value="">Choose sort method</option>
               <option value="name">Name A-Z</option>
               <option value="name-desc">Name Z-A</option>
               <option value="hunger-level">Hunger Level, Ascending</option>
@@ -139,6 +149,8 @@ const PetListHome = () => {
               <option value="happiness-level-desc">
                 Happiness Level, Descending
               </option>
+              <option value="id-asc">ID, Ascending</option>
+              <option value="id-desc">ID, Descending</option>
             </select>
           </div>
           <div className="search-bar-toggle-container">

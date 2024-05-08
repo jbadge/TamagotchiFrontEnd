@@ -30,18 +30,11 @@ const CreatePetForm = () => {
 
   const fetchPokemonSpritesAndImages = async () => {
     if (newPetName) {
-      // const sprites = await getPokemonSprites(pokemonNames)
-      // const images = await getPokemonImages(pokemonNames)
-      const foundImage = (await getPokemonImage(newPetName)).picture
       // Set Sprite
       const foundSprite = (await getPokemonSprite(newPetName)).picture
-      // sprites.find((pokemon) => newPetName.toLowerCase() === pokemon.name)
-      //   ?.picture || ''
 
       // Set Image
-      // const foundImage =
-      //   images.find((pokemon) => newPetName.toLowerCase() === pokemon.name)
-      //     ?.picture || ''
+      const foundImage = (await getPokemonImage(newPetName)).picture
 
       // Validate Urls
       const isValidSprite = await isValidUrl(foundSprite)
@@ -63,8 +56,7 @@ const CreatePetForm = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    // console.log('!!newPetName.trim()', !!newPetName.trim())
-    // console.log('!newPetName.trim()', !newPetName.trim())
+
     if (!newPetName.trim()) {
       setInvalidName(true)
       return
@@ -73,7 +65,6 @@ const CreatePetForm = () => {
     }
     setSubmitted(true)
 
-    // POKEMON CHECKING BLOCK
     const isPokemonName = pokemonNames.includes(newPetName.toLowerCase())
 
     // Get Sprites and Images for Pokemon Name
@@ -133,21 +124,7 @@ const CreatePetForm = () => {
     }
   }, [isValidImageUrl])
 
-  // function checkStates() {
-  //   console.log('submitted', submitted)
-  //   console.log('urlSubmitted', urlSubmitted)
-  //   console.log('isValidSpriteUrl', isValidSpriteUrl)
-  //   console.log('isValidImageUrl', isValidImageUrl)
-  //   console.log('newPetName', newPetName)
-  //   console.log('newPetSprite', newPetSprite)
-  //   console.log('newPetImage', newPetImage)
-  //   console.log('spriteTouched', spriteTouched)
-  //   console.log('imageTouched', imageTouched)
-  // }
-
   return (
-    // <div className="container">
-    //   <div className="cross"></div>
     <form id="create-pet-form" onSubmit={handleSubmit}>
       <ul>
         <li className="input-label">Add a new pet to the database:</li>
@@ -226,18 +203,10 @@ const CreatePetForm = () => {
           </li>
         )}
         <li>
-          {/* <div className="btn-container"> */}
           <button type="submit">Add Pet</button>
-          {/* </div> */}
         </li>
-        {/* <li>
-          <button onClick={checkStates} type="submit">
-            Check States
-          </button>
-        </li> */}
       </ul>
     </form>
-    // </div>
   )
 }
 

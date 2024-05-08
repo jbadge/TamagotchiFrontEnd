@@ -18,9 +18,6 @@ const useCreatePet = () => {
       onSuccess: function () {
         refetchPets()
       },
-      // onError: function (error) {
-      //   console.error('An error occurred:', error)
-      // },
     }
   )
 }

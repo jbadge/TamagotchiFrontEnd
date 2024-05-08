@@ -1,12 +1,12 @@
 import axios from 'axios'
-import { PetType as PetType } from './types/PetsTypes'
+import { PetType } from './types/PetsTypes'
 
 const BASE_URL = 'http://localhost:5000'
 
 // Get all pets
 export async function getPets() {
   const response = await axios.get<PetType[]>(`${BASE_URL}/api/Pets/`)
-  // console.log(response.data)
+
   return response.data
 }
 
@@ -62,10 +62,6 @@ export async function createPlaytime(id: string) {
 
 // Add a feeding for a pet
 export async function createFeeding(id: string) {
-  // const petDetails = await getPet(id)
-  // if (petDetails.hungerLevel! < 5) {
-  //   throw new Error(`${petDetails.name} is not hungry enough to eat!`)
-  // }
   const response = await axios.post<PetType>(
     `${BASE_URL}/api/Pets/${id}/Feedings`
   )
@@ -75,10 +71,6 @@ export async function createFeeding(id: string) {
 
 // Add a scolding for a pet
 export async function createScolding(id: string) {
-  // const petDetails = await getPet(id)
-  // if (petDetails.happinessLevel! < 0) {
-  //   throw new Error(`${petDetails.name} has died from depression`)
-  // }
   const response = await axios.post<PetType>(
     `${BASE_URL}/api/Pets/${id}/Scoldings`
   )
@@ -91,5 +83,6 @@ export async function toggleItemComplete(id: string, isDead: boolean) {
   const response = await axios.put(`${BASE_URL}/api/Pets/${id}`, {
     pet: { complete: !isDead },
   })
+
   return response.data
 }

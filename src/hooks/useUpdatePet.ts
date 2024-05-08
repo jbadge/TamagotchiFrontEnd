@@ -9,9 +9,9 @@ const useUpdatePet = (id: string) => {
     onSuccess: function () {
       refetchPet()
     },
-    // onError: function (error) {
-    //   console.error('An error occurred:', error)
-    // },
+    onSettled: function () {
+      refetchPet()
+    },
   })
 }
 
