@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// 151 && 1302
+// 151 && 1302 (range 152-1025, 10001-10277)
 export async function getAllPokemon() {
   const response = await axios.get(
     'https://pokeapi.co/api/v2/pokemon?limit=1302'
@@ -42,7 +42,7 @@ export async function getPokemonSprite(
       return { name, picture: '' }
     }
   } catch (error) {
-    console.error(`Error fetching picture for ${name}`, error)
+    console.error(`Error fetching picture for ${name}`)
     return { name, picture: '' }
   }
 }
@@ -66,10 +66,7 @@ export async function getPokemonImage(
       return { name, picture: '' }
     }
   } catch (error) {
-    console.error(
-      `Error fetching picture for ${name}`
-      // , error
-    )
+    console.error(`Error fetching picture for ${name}`)
     return { name, picture: '' }
   }
 }

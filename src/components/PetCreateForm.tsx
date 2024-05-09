@@ -2,26 +2,23 @@ import React from 'react'
 import useCreatePet from '../hooks/useCreatePet'
 import { usePokemonNamesContext } from '../context/PokemonNamesContext'
 import { getPokemonImage, getPokemonSprite, isValidUrl } from '../otherApi'
+import { EmptyPet, PetType } from '../types/PetsTypes'
 
 const CreatePetForm = () => {
   const createMutation = useCreatePet()
   const { pokemonNames } = usePokemonNamesContext()
 
-  const [newPetName, setNewPetName] = React.useState('')
-  const [newPetImage, setNewPetImage] = React.useState('')
-  const [newPetSprite, setNewPetSprite] = React.useState('')
+  const [newPet, setNewPet] = React.useState<PetType>(EmptyPet)
 
   const [submitted, setSubmitted] = React.useState(false)
-  const [spriteUrlValid, setSpriteUrlValid] = React.useState(false)
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [isValidSpriteUrl, setIsValidSpriteUrl] = React.useState(false)
+  const [isValidImageUrl, setIsValidImageUrl] = React.useState(false)
+  const [invalidName, setInvalidName] = React.useState(false)
+
   const [trySubmitSprite, setTrySubmitSprite] = React.useState(false)
   const [trySubmitImage, setTrySubmitImage] = React.useState(false)
 
-  const [invalidName, setInvalidName] = React.useState(false)
-  // const [isPokemonName, setIsPokemonName] = React.useState(false)
-  const [isValidSpriteUrl, setIsValidSpriteUrl] = React.useState(false)
-  const [isValidImageUrl, setIsValidImageUrl] = React.useState(false)
-
-  // const [nameTouched, setNameTouched] = React.useState(false)
   const [spriteTouched, setSpriteTouched] = React.useState(false)
   const [imageTouched, setImageTouched] = React.useState(false)
 
@@ -32,9 +29,35 @@ const CreatePetForm = () => {
   let isPokemonName = false
   let spriteCheck = false
   let imageCheck = false
+  // setTimeout(() => {
+  //   setIsSubmitting(false)
+  // }, 1000)
+
+  // debouncedHandleSubmit
+
+  // React.useCallback(
+  // [isSubmitting]
+  // )
+
+  // const debouncedHandleSubmit = React.useCallback(debounce(handleSubmit, 300), [
+  //   handleSubmit,
+  // ])
+
+  // function debounce<T extends unknown[]>(
+  //   func: (..._args: T) => void,
+  //   delay: number
+  // ): (..._args: T) => void {
+  //   let timer: number | null = null
+  //   return (...args: T) => {
+  //     if (timer) clearTimeout(timer)
+  //     timer = setTimeout(() => {
+  //       func.call(null, ...args)
+  //     }, delay)
+  //   }
+  // }
 
   const fetchPokemonSpritesAndImages = async (newPetId?: string) => {
-    const value = newPetId || newPetName
+    const value = newPetId || newPet.name
     if (value) {
       // Set Sprite
       const foundSprite = (await getPokemonSprite(value)).picture
@@ -52,40 +75,57 @@ const CreatePetForm = () => {
       if (isValidImage) {
         setIsValidImageUrl(true)
       }
-
-      setNewPetSprite(foundSprite)
-      setNewPetImage(foundImage)
-      if (isPokemonName) {
-        setNewPetName(
-          newPetName
-            .toLowerCase()
-            .replace(/\b\w/g, (char) => char.toUpperCase())
-        )
-      }
+      newPetId
+        ? setNewPet({
+            ...newPet,
+            name: newPet.name,
+            spriteUrl: foundSprite,
+            imageUrl: foundImage,
+          })
+        : setNewPet({
+            ...newPet,
+            name: newPet.name
+              .toLowerCase()
+              .replace(/\b\w/g, (char) => char.toUpperCase()),
+            spriteUrl: foundSprite,
+            imageUrl: foundImage,
+          })
     }
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (submitted && !spriteUrlValid) {
+
+    if (isSubmitting) {
+      return
+    }
+
+    setIsSubmitting(true)
+    setTimeout(() => {
+      setIsSubmitting(false)
+    }, 100)
+
+    if (submitted) {
       setSpriteTouched(true)
       spriteCheck = true
     }
 
-    if (spriteUrlValid) {
+    if (isValidSpriteUrl) {
       setImageTouched(true)
       imageCheck = true
     }
 
-    if (!newPetName.trim()) {
+    if (!newPet.name.trim()) {
       setInvalidName(true)
+      // setIsSubmitting(false)
       return
-    } else {
-      setInvalidName(false)
     }
+    // else {
+    //   setInvalidName(false)
+    // }
     setSubmitted(true)
+    isPokemonName = pokemonNames.includes(newPet.name.toLowerCase())
 
-    isPokemonName = pokemonNames.includes(newPetName.toLowerCase())
     // Get Sprites and Images for Pokemon Name
     if (isPokemonName) {
       isPokemonName = true
@@ -95,58 +135,67 @@ const CreatePetForm = () => {
     }
 
     if (!spriteCheck && !imageCheck) {
+      // setIsSubmitting(false)
       return
     }
 
     if (!isPokemonName) {
-      // Make sure sprite is valid, allows immediate return
+      // Make sure sprite is valid, else try again
       if (spriteCheck) {
-        const isValidSprite = await isValidUrl(newPetSprite)
+        const isValidSprite = await isValidUrl(newPet.spriteUrl)
         if (spriteTouched && !isValidSprite) {
           setIsValidSpriteUrl(false)
           setTrySubmitSprite(true)
           petSpriteRef.current?.focus()
+          // setIsSubmitting(false)
           return
         }
-        setSpriteUrlValid(true)
+        // setSpriteUrlValid(true)
         setIsValidSpriteUrl(true)
         setTrySubmitSprite(false)
       }
 
-      // Make sure image is valid, allows immediate return
+      // Make sure image is valid, else try again
       if (imageCheck) {
-        const isValidImage = await isValidUrl(newPetImage)
+        const isValidImage = await isValidUrl(newPet.imageUrl)
         if (imageTouched && !isValidImage) {
           setTrySubmitImage(true)
           setIsValidImageUrl(false)
           petImageRef.current?.focus()
+          // setIsSubmitting(false)
           return
         }
-        // Grab random image and sprite for empty urls
-        if (newPetSprite === '' && newPetImage === '') {
-          let x = Math.floor(Math.random() * 1151) + 152
-          fetchPokemonSpritesAndImages(String(x))
+
+        // Grab random image and sprite pokemon for empty picture urls
+        if (newPet.spriteUrl === '' && newPet.imageUrl === '') {
+          const coinToss = Math.random() < 0.5
+          const randomNumber = coinToss
+            ? Math.floor(Math.random() * (1025 - 152 + 1)) + 152
+            : Math.floor(Math.random() * (10277 - 10001 + 1)) + 10001
+          fetchPokemonSpritesAndImages(String(randomNumber))
         } else {
-          if (isValidImage) {
+          if (
+            newPet.spriteUrl !== '' &&
+            newPet.imageUrl !== '' &&
+            isValidImage
+          ) {
             setIsValidImageUrl(true)
           }
         }
       }
     }
+    // setIsSubmitting(false)
   }
 
   React.useEffect(() => {
-    if (isValidImageUrl) {
+    if (isValidImageUrl && newPet.spriteUrl !== '' && newPet.imageUrl !== '') {
       createMutation.mutate({
-        newPetName: newPetName,
-        spriteUrl: newPetSprite,
-        imageUrl: newPetImage,
+        newPetName: newPet.name,
+        spriteUrl: newPet.spriteUrl,
+        imageUrl: newPet.imageUrl,
       })
-      setNewPetName('')
-      setNewPetSprite('')
-      setNewPetImage('')
+      setNewPet(EmptyPet)
       setSubmitted(false)
-      setSpriteUrlValid(false)
       setInvalidName(false)
       setIsValidSpriteUrl(false)
       setIsValidImageUrl(false)
@@ -155,6 +204,12 @@ const CreatePetForm = () => {
       petNameRef.current?.focus()
     }
   }, [isValidImageUrl])
+
+  React.useEffect(() => {
+    if (isValidSpriteUrl) {
+      petImageRef.current?.focus()
+    }
+  }, [isValidSpriteUrl])
 
   return (
     <form id="create-pet-form" onSubmit={handleSubmit}>
@@ -166,9 +221,12 @@ const CreatePetForm = () => {
               <input
                 type="text"
                 placeholder="Pet Name"
-                value={newPetName}
+                value={newPet.name}
                 onChange={(event) => {
-                  setNewPetName(event.target.value)
+                  setNewPet((prevPet) => ({
+                    ...prevPet,
+                    name: event.target.value,
+                  }))
                   setInvalidName(false)
                   setSubmitted(false)
                 }}
@@ -180,24 +238,27 @@ const CreatePetForm = () => {
             </li>
           </ul>
         </li>
-        {submitted && !pokemonNames.includes(newPetName.toLowerCase()) && (
+        {submitted && !pokemonNames.includes(newPet.name.toLowerCase()) && (
           <li>
             <ul className="input-container">
-              {!spriteUrlValid ? (
+              {!isValidSpriteUrl ? (
                 <li>
                   <input
                     type="text"
                     placeholder="Add a sprite from a url"
-                    value={newPetSprite}
+                    value={newPet.spriteUrl}
                     onChange={(event) => {
-                      setNewPetSprite(event.target.value)
-                      setTrySubmitSprite(false)
                       setSpriteTouched(true)
+                      setNewPet((prevPet) => ({
+                        ...prevPet,
+                        spriteUrl: event.target.value,
+                      }))
+                      setTrySubmitSprite(false)
                     }}
                     ref={petSpriteRef}
                     autoFocus={
                       !submitted ||
-                      !pokemonNames.includes(newPetName.toLowerCase())
+                      !pokemonNames.includes(newPet.name.toLowerCase())
                     }
                     onKeyDown={() => {
                       setSpriteTouched(true)
@@ -212,15 +273,18 @@ const CreatePetForm = () => {
                   <input
                     type="text"
                     placeholder="Add an image from a url"
-                    value={newPetImage}
+                    value={newPet.imageUrl}
                     onChange={(event) => {
-                      setNewPetImage(event.target.value)
+                      setNewPet((prevPet) => ({
+                        ...prevPet,
+                        imageUrl: event.target.value,
+                      }))
                       setTrySubmitImage(false)
                       setIsValidImageUrl(false)
                       setImageTouched(true)
                     }}
                     ref={petImageRef}
-                    autoFocus={!spriteUrlValid && submitted}
+                    autoFocus={!isValidSpriteUrl && submitted}
                     onKeyDown={() => {
                       setImageTouched(true)
                     }}
@@ -234,9 +298,10 @@ const CreatePetForm = () => {
           </li>
         )}
         <li>
-          <button type="submit">Add Pet</button>
+          <button type="submit" disabled={isSubmitting}>
+            Add Pet
+          </button>
         </li>
-        <li></li>
       </ul>
     </form>
   )
