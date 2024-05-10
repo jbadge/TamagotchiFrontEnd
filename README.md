@@ -1,4 +1,4 @@
-The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a Tamagotchi virtual pet. It uses a React front-end with a C# back-end (currently not deployed). It also uses the Poke API for fetching Pokemon images if the user chooses a Pokemon name, or random Pokemon images if the user does not specify image URLs during creation. Users can also link their own, non-Pokemon images to their pets.
+The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a Tamagotchi virtual pet. It uses a React front-end with a C# back-end (currently not deployed). It also uses the Poke API for fetching Pokemon images if the user chooses a Pokemon name, or random Pokemon images if the user does not specify image URLs during creation. Users can also link any non-Pokemon images to their pets during pet creation.
 
 Deployed at: https://tamagotchi-reloaded-jb.netlify.app
 
