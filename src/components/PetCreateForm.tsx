@@ -29,32 +29,6 @@ const CreatePetForm = () => {
   let isPokemonName = false
   let spriteCheck = false
   let imageCheck = false
-  // setTimeout(() => {
-  //   setIsSubmitting(false)
-  // }, 1000)
-
-  // debouncedHandleSubmit
-
-  // React.useCallback(
-  // [isSubmitting]
-  // )
-
-  // const debouncedHandleSubmit = React.useCallback(debounce(handleSubmit, 300), [
-  //   handleSubmit,
-  // ])
-
-  // function debounce<T extends unknown[]>(
-  //   func: (..._args: T) => void,
-  //   delay: number
-  // ): (..._args: T) => void {
-  //   let timer: number | null = null
-  //   return (...args: T) => {
-  //     if (timer) clearTimeout(timer)
-  //     timer = setTimeout(() => {
-  //       func.call(null, ...args)
-  //     }, delay)
-  //   }
-  // }
 
   const fetchPokemonSpritesAndImages = async (newPetId?: string) => {
     const value = newPetId || newPet.name
@@ -117,12 +91,9 @@ const CreatePetForm = () => {
 
     if (!newPet.name.trim()) {
       setInvalidName(true)
-      // setIsSubmitting(false)
       return
     }
-    // else {
-    //   setInvalidName(false)
-    // }
+
     setSubmitted(true)
     isPokemonName = pokemonNames.includes(newPet.name.toLowerCase())
 
@@ -135,7 +106,6 @@ const CreatePetForm = () => {
     }
 
     if (!spriteCheck && !imageCheck) {
-      // setIsSubmitting(false)
       return
     }
 
@@ -147,10 +117,8 @@ const CreatePetForm = () => {
           setIsValidSpriteUrl(false)
           setTrySubmitSprite(true)
           petSpriteRef.current?.focus()
-          // setIsSubmitting(false)
           return
         }
-        // setSpriteUrlValid(true)
         setIsValidSpriteUrl(true)
         setTrySubmitSprite(false)
       }
@@ -162,7 +130,6 @@ const CreatePetForm = () => {
           setTrySubmitImage(true)
           setIsValidImageUrl(false)
           petImageRef.current?.focus()
-          // setIsSubmitting(false)
           return
         }
 
@@ -184,7 +151,6 @@ const CreatePetForm = () => {
         }
       }
     }
-    // setIsSubmitting(false)
   }
 
   React.useEffect(() => {

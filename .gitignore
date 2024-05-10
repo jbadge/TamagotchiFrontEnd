@@ -5,5 +5,4 @@ dist-ssr
 *.local
 
 scratchpad.md
-PetDetails.bak
-src/pokemonPics.ts
+src/alignmentTools.css
