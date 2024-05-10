@@ -1,24 +1,30 @@
 // @ts-nocheck
 import axios from 'axios'
-import pets from '../src/pet.json'
+// import pets from '../src/pet.json'
 import { PetType } from './types/PetsTypes'
 
 const BASE_URL = 'http://localhost:5000'
 
 // Get all pets
 export async function getPets() {
-  // const response = await axios.get<PetType[]>(`${BASE_URL}/api/Pets/`)
+  // For use with API
+  const response = await axios.get<PetType[]>(`${BASE_URL}/api/Pets/`)
 
-  // return response.data
-  return pets
+  return response.data
+
+  // For use with pets.json
+  // return pets
 }
 
 // Get one pet
 export async function getPet(id: string) {
-  // const response = await axios.get<PetType>(`${BASE_URL}/api/Pets/${id}`)
+  // For use with API
+  const response = await axios.get<PetType>(`${BASE_URL}/api/Pets/${id}`)
 
-  // return response.data
-  return pets.find((pet) => pet.id === Number(id))
+  return response.data
+
+  // For use with pets.json
+  // return pets.find((pet) => pet.id === Number(id))
 }
 
 // Create a pet
