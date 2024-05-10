@@ -2,29 +2,6 @@ The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a 
 
 Deployed at: https://tamagotchi-reloaded-jb.netlify.app
 
-    The database has a table named Pets.
-        Uses a POCO called Pet with the following columns:
-            Id (int - automatic primary key)
-            Name (string)
-            Birthday (DateTime)
-            HungerLevel (int)
-            HappinessLevel (int)
-
-    Includes a table named Playtimes that has the following columns:
-        Id (int - automatic primary key)
-        When (DateTime)
-        PetId (int - foreign key to Pet)
-
-    Also includes a table named Feedings that has the following columns:
-        Id (int - automatic primary key)
-        When (DateTime)
-        PetId (int - foreign key to Pet)
-
-    Also includes a table named Scoldings that has the following columns:
-        Id (int - automatic primary key)
-        When (DateTime)
-        PetId (int - foreign key to Pet)
-
 The API has the following endpoints.
 
     GET /Pets returns all pets in your database.
