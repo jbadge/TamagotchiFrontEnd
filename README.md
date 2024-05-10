@@ -15,3 +15,5 @@ The API has the following endpoints.
 
     There are two additional columns, LastInteractedWithDate (DateTime) and IsDead (boolean). When a pet is updated, the API sets the LastInteractedWithDate to the current time. If LastInteractedWithDate is over three days old, IsDead will return true; otherwise, it will return false.
     GET /Pets only returns Pets that are alive.
+
+    The front-end adds two additional fields, spriteUrl and imageUrl. SpriteUrl holds the image to display on the Home screen with the list of pets. ImageUrl holds the image on the details page of the pet.
