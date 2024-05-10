@@ -73,7 +73,7 @@ const Pet = ({
           <Link to={`/pets/${id}`}>{name}</Link>
         </li>
         <li>
-          Birthday:
+          Birthday:{' '}
           {`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`}
         </li>
         <li>Hunger Level: {hungerLevel}</li>

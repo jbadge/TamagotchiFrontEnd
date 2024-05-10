@@ -6,3 +6,5 @@ dist-ssr
 
 scratchpad.md
 src/alignmentTools.css
+# Local Netlify folder
+.netlify

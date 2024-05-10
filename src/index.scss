@@ -371,7 +371,7 @@ ul {
           transform: scale(0.95);
         }
         .pet-details-block {
-          padding: 20px;
+          padding: 25px;
           --border-radius: 10px;
           position: absolute;
           width: 77%;
@@ -414,9 +414,12 @@ ul {
             flex-direction: column;
             border-radius: 55px;
             z-index: 5;
+            // left: 15%;
             ul li {
               font-size: 1.3rem;
               padding: 1rem;
+              padding-left: 25%;
+              white-space: nowrap;
             }
             .hunger-level {
               display: block;
