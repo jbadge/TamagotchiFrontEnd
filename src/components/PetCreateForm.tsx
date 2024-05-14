@@ -33,9 +33,10 @@ const CreatePetForm = () => {
   const fetchPokemonSpritesAndImages = async (newPetId?: string) => {
     const value = newPetId || newPet.name
     if (value) {
+      console.log(value)
       // Set Sprite
       const foundSprite = (await getPokemonSprite(value)).picture
-
+console.log(foundSprite)
       // Set Image
       const foundImage = (await getPokemonImage(value)).picture
 

@@ -16,7 +16,7 @@ export async function getPokemonSprite(
 ): Promise<{ name: string; picture: string }> {
   try {
     const response = await axios.get(
-      `https://pokeapi.co/api/v2/pokemon/${name}`
+      `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
     )
     const { data } = response
     if (
@@ -38,11 +38,11 @@ export async function getPokemonSprite(
         picture: data.sprites.front_default,
       }
     } else {
-      console.error(`Required data not found for ${name}`)
+      console.error(`Required data not found for ${name.toLowerCase()}`)
       return { name, picture: '' }
     }
   } catch (error) {
-    console.error(`Error fetching picture for ${name}`)
+    console.error(`Error fetching picture for ${name.toLowerCase()}`)
     return { name, picture: '' }
   }
 }
@@ -53,7 +53,7 @@ export async function getPokemonImage(
 ): Promise<{ name: string; picture: string }> {
   try {
     const response = await axios.get(
-      `https://pokeapi.co/api/v2/pokemon/${name}`
+      `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
     )
     const { data } = response
     if (data.sprites.other['official-artwork'].front_default) {
@@ -62,11 +62,11 @@ export async function getPokemonImage(
         picture: data.sprites.other['official-artwork'].front_default,
       }
     } else {
-      console.error(`Required data not found for ${name}`)
+      console.error(`Required data not found for ${name.toLowerCase()}`)
       return { name, picture: '' }
     }
   } catch (error) {
-    console.error(`Error fetching picture for ${name}`)
+    console.error(`Error fetching picture for ${name.toLowerCase()}`)
     return { name, picture: '' }
   }
 }

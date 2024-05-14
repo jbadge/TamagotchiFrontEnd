@@ -1,8 +1,8 @@
 import React from 'react'
 import Pet from '../components/Pet'
 import useLoadPets from '../hooks/useLoadPets'
-import CreatePetForm from '../components/PetCreateForm'
-import SearchPetForm from '../components/SearchPetForm'
+import PetCreateForm from '../components/PetCreateForm'
+import PetSearchForm from '../components/PetSearchForm'
 import { PetType } from '../types/PetsTypes'
 
 const PetListHome = () => {
@@ -155,7 +155,7 @@ const PetListHome = () => {
           </div>
           <div className="search-bar-toggle-container">
             <div className="search-bar-container">
-              <SearchPetForm onSearchChange={handleSearchChange} />
+              <PetSearchForm onSearchChange={handleSearchChange} />
             </div>
             <div className="toggle-dead-button-container">
               <button onClick={toggleFilterDeadPets}>
@@ -174,7 +174,7 @@ const PetListHome = () => {
                 <Pet key={pet.id} pet={pet} />
               ))}
           </ul>
-          <CreatePetForm />
+          <PetCreateForm />
         </div>
       </div>
     </section>

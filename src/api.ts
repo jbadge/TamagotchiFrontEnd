@@ -3,7 +3,8 @@ import axios from 'axios'
 // import pets from '../src/pet.json'
 import { PetType } from './types/PetsTypes'
 
-const BASE_URL = 'http://localhost:5000'
+const BASE_URL = 'http://192.168.0.241:5000'
+// 'http://localhost:5000'
 
 // Get all pets
 export async function getPets() {
