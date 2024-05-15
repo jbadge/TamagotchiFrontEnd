@@ -11,7 +11,7 @@
 
 React.js, TypeScript, React-Router, React-Query
 
-The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a Tamagotchi virtual pet. It uses a React front-end with a C# back-end (currently not deployed). It also uses the Poke API for fetching Pokemon images if the user chooses a Pokemon name, or random Pokemon images if the user does not specify image URLs during creation. Users can also link any non-Pokemon images to their pets during pet creation.
+The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a Tamagotchi virtual pet. It uses a React front-end with a C# back-end (currently not deployed). It also uses the [Poke API](https://pokeapi.co/) for fetching Pokemon images if the user chooses a Pokemon name, or random Pokemon images if the user does not specify image URLs during creation. Users can also link any non-Pokemon images to their pets during pet creation.
 
 **Link to backend:** https://github.com/jbadge/TamagotchiAPI
 
