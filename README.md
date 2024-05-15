@@ -22,7 +22,7 @@ The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a 
 **Tech used:**
 ASP.NET CORE, C#, Entity Framework, PostgreSQL
 
-This RESTful backend is built using C#. Entity Framework is used to run SQL queries to a PostgreSQL database.
+This RESTful API is built using C#. Entity Framework is used to run SQL queries to a PostgreSQL database.
 
 ## Optimizations:
 
