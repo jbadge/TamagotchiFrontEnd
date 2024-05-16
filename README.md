@@ -54,6 +54,7 @@ During pet creation, Birthday defaults to the current DateTime, Hunger Level def
 | `POST`   | `/api/Pets/5/Scoldings` | Add a scolding to post #5, subtracting 5 from Happiness level.                       |
 
 The front-end adds two additional fields, spriteUrl and imageUrl. SpriteUrl holds the image to display on the Home screen with the list of pets. ImageUrl holds the image on the details page of the pet.
+sfdjkhan
 
 ## Acknowledgements
 
