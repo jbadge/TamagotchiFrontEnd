@@ -17,22 +17,15 @@ The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a 
 
 **Link to static implementation of project:** https://tamagotchi-reloaded-jb.netlify.app/
 
-## How It's Made:
-
-**Tech used:**
-ASP.NET CORE, C#, Entity Framework, PostgreSQL
-
-This RESTful API is built using C#. Entity Framework is used to run SQL queries to a PostgreSQL database.
-
-## Optimizations:
+## Optimizations
 
 I added a PUT method in order to make on-the-fly changes to pets for diagnostic purposes. I also have (currently commented out) code in order to run on external devices within a LAN, both in the frontend and backend code. Not only did this help with testing, as I did not deploy the backend codebase, but also allowed my 7 year old to have her own database, resulting in a happy 7 year old.
 
-## Lessons Learned:
+## Lessons Learned
 
 How to implement a full-stack application by building a backend API. After all was said and done, I was fascinated by the simplicity of the HTTP requests. Seeing it all come together after the frontend was built, with the SQL queries to the database resulting in a fun, interactive pet database, was very satisfying.
 
-## Endpoints:
+## Endpoints
 
 Please note, the API uses PUT instead of PATCH for updating.
 
@@ -62,7 +55,12 @@ During pet creation, Birthday defaults to the current DateTime, Hunger Level def
 
 The front-end adds two additional fields, spriteUrl and imageUrl. SpriteUrl holds the image to display on the Home screen with the list of pets. ImageUrl holds the image on the details page of the pet.
 
-## Acknowledgements:
+## Acknowledgements
+
+- [My Awesome Project](https://github.com/alec-chernicki/portfolio-template/blob/master/README.md)
+- [Best-README](https://github.com/othneildrew/Best-README-Template/blob/master/README.md)
+- [Img Shields](https://shields.io/)
+- [How to write APIs](https://github.com/ml-archive/readme/blob/master/Documentation/how-to-write-apis.md)
 
 [product-screenshot]: /images/screenshot.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
