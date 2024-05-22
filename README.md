@@ -55,6 +55,7 @@ During pet creation, Birthday defaults to the current DateTime, Hunger Level def
 
 The front-end adds two additional fields, spriteUrl and imageUrl. SpriteUrl holds the image to display on the Home screen with the list of pets. ImageUrl holds the image on the details page of the pet.
 
+
 ## Acknowledgements
 
 - [My Awesome Project](https://github.com/alec-chernicki/portfolio-template/blob/master/README.md)

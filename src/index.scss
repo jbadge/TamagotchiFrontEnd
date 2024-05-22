@@ -546,12 +546,99 @@ ul {
 }
 
 @media screen and (max-width: 815px) {
-  .pet-container {
+  .app {
+    header {
+      .name {
+        font-size: 50px;
+        margin-bottom: 8px;
+        h1 {
+          top: 0px;
+          left: 50%;
+          font-size: 15px;
+          letter-spacing: 0ch;
+          white-space: nowrap;
+        }
+        .h {
+          font-size: 52px;
+        }
+      }
+    }
+    section {
+      padding: 0;
+    }
+    .pet-list-container {
+      width: 400px;
+      .filter-options-container {
+        align-self: center;
+        .filter-options {
+          flex-direction: column-reverse;
+        }
+      }
+      .list-pets {
+        display: flex;
+        width: 100%;
+      }
+    }
     .pet-details-container {
-      .pet-details-inner {
-        .pet-details-block {
-          margin: 10%;
-          padding: 15%;
+      .breadcrumb {
+        padding-left: 10px;
+      }
+      .pet-details-pet-container {
+        .pet-details-name {
+          margin-top: -3rem;
+          padding-bottom: 0;
+          font-size: 25px;
+        }
+        .pet-details-inner {
+          justify-content: flex-start;
+          height: 500px;
+          .pet-details-block {
+            display: flex;
+            flex-direction: column;
+            height: 80%;
+            width: 80%;
+            margin: 10%;
+            .pet-details-picture {
+              width: 80%;
+              z-index: -10;
+            }
+            .pet-details-info {
+              align-self: start;
+              margin: 10px -10%;
+              left: 10%;
+              ul li {
+                font-size: 1rem;
+                padding-bottom: 0;
+                padding-top: 8px;
+              }
+              .hunger-level {
+                .hunger-message {
+                  margin-top: 2rem;
+                  margin-left: -28%;
+                  color: red;
+                }
+              }
+              .happiness-level {
+                .happiness-message {
+                  position: absolute;
+                  display: block;
+                  left: 35%;
+                  transformx: 50%;
+                  margin-top: -1%;
+                  margin-left: -25%;
+                  color: red;
+                  &::after {
+                    content: ' ';
+                    white-space: pre;
+                  }
+                  span.break-point {
+                    text-align: center;
+                    display: block;
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -164,7 +164,8 @@ const PetDetails = () => {
                     <div>Happiness Level: {pet.happinessLevel}</div>
                     {pet.isDead && (
                       <div className="happiness-message">
-                        {pet.name} has died from sadness & depression!
+                        {pet.name} has died from sadness &{' '}
+                        <span className="break-point">depression!</span>
                       </div>
                     )}
                   </li>

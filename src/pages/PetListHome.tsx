@@ -97,6 +97,55 @@ const PetListHome = () => {
     }
   }
 
+  function removeDuplicates(nums: string[]): number {
+    console.log('running')
+    // let candidate
+    let count = 0
+
+    for (const i in nums) {
+      console.log(nums)
+      console.log('i', i)
+      count += 1
+    }
+    return count
+    // for (const num of nums) {
+    //   console.log('num', num)
+    //   console.log('count', count)
+    //   console.log('candidate', candidate)
+    //   if (count === 0) {
+    //     candidate = num
+    //     console.log('setting candidate to ', num)
+    //   }
+
+    //   count += num === candidate ? 1 : -1
+    //   console.log('count', count)
+    // }
+    // console.log('candidate', candidate)
+    // return candidate!
+    // console.log('running')
+    // let count = 0
+    // let number = 0
+    // nums.sort()
+
+    // for (let i = 0; i < nums.length; i++) {
+    //   let tempNums = nums.filter((element) => element === nums[i])
+    //   console.log('tempNums', tempNums)
+    //   if (tempNums.length > count) {
+    //     count = tempNums.length
+    //     number = nums[i]
+    //     // console.log('count', count)
+    //     // console.log('number', nums[i])
+    //   }
+    // }
+    // // console.log('count', count)
+    // console.log('number', number)
+    // return number
+  }
+
+  React.useEffect(() => {
+    removeDuplicates(['a', 'b', 'c'])
+  }, [])
+
   // Toggle on/off results displaying dead pets
   const toggleFilterDeadPets = () => {
     setShowDeadPets((prevShowDeadPets) => !prevShowDeadPets)
