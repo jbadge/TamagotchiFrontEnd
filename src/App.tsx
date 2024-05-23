@@ -16,7 +16,8 @@ export function App() {
           </div>
         </header>
         <span className="static-message">
-          The database is currently not deployed. The website is static.
+          The database is currently not deployed. <br />
+          The website is static.
         </span>
         <main>
           <Routes>
