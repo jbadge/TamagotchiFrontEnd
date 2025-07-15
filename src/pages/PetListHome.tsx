@@ -171,10 +171,6 @@ const PetListHome = () => {
     }
   }, [pets])
 
-  if (isPetsLoading) {
-    return null
-  }
-
   return (
     <section className="pet-list-container">
       <div className="filter-options-container">

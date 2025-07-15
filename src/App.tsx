@@ -15,10 +15,10 @@ export function App() {
             <span className="h">h</span>i
           </div>
         </header>
-        <span className="static-message">
+        {/* <span className="static-message">
           The database is currently not deployed. <br />
           The website is static.
-        </span>
+        </span> */}
         <main>
           <Routes>
             <Route path="/" element={<PetListHome />} />
