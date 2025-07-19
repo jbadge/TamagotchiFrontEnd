@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Pet from '../components/Pet'
 import useLoadPets from '../hooks/useLoadPets'
 import PetCreateForm from '../components/PetCreateForm'
@@ -7,10 +7,10 @@ import { PetType } from '../types/PetsTypes'
 
 const PetListHome = () => {
   const { pets, isPetsLoading } = useLoadPets()
-  const [searchQuery, setSearchQuery] = React.useState<string>('')
-  const [filteredPets, setFilteredPets] = React.useState<PetType[]>([])
-  const [showDeadPets, setShowDeadPets] = React.useState<boolean>(false)
-  const [sortBy, setSortBy] = React.useState<string>('default')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [filteredPets, setFilteredPets] = useState<PetType[]>([])
+  const [showDeadPets, setShowDeadPets] = useState<boolean>(false)
+  const [sortBy, setSortBy] = useState<string>('default')
 
   // Search
   const handleSearchChange = (query: string) => {
@@ -97,62 +97,13 @@ const PetListHome = () => {
     }
   }
 
-  function removeDuplicates(nums: string[]): number {
-    console.log('running')
-    // let candidate
-    let count = 0
-
-    for (const i in nums) {
-      console.log(nums)
-      console.log('i', i)
-      count += 1
-    }
-    return count
-    // for (const num of nums) {
-    //   console.log('num', num)
-    //   console.log('count', count)
-    //   console.log('candidate', candidate)
-    //   if (count === 0) {
-    //     candidate = num
-    //     console.log('setting candidate to ', num)
-    //   }
-
-    //   count += num === candidate ? 1 : -1
-    //   console.log('count', count)
-    // }
-    // console.log('candidate', candidate)
-    // return candidate!
-    // console.log('running')
-    // let count = 0
-    // let number = 0
-    // nums.sort()
-
-    // for (let i = 0; i < nums.length; i++) {
-    //   let tempNums = nums.filter((element) => element === nums[i])
-    //   console.log('tempNums', tempNums)
-    //   if (tempNums.length > count) {
-    //     count = tempNums.length
-    //     number = nums[i]
-    //     // console.log('count', count)
-    //     // console.log('number', nums[i])
-    //   }
-    // }
-    // // console.log('count', count)
-    // console.log('number', number)
-    // return number
-  }
-
-  React.useEffect(() => {
-    removeDuplicates(['a', 'b', 'c'])
-  }, [])
-
   // Toggle on/off results displaying dead pets
   const toggleFilterDeadPets = () => {
     setShowDeadPets((prevShowDeadPets) => !prevShowDeadPets)
   }
 
   // Updates filtered list when the search field is used
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isPetsLoading) {
       let filtered = pets.filter((pet) => showDeadPets || !pet.isDead)
       if (searchQuery) {
@@ -165,7 +116,7 @@ const PetListHome = () => {
   }, [showDeadPets, searchQuery])
 
   // Initial Load
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isPetsLoading) {
       setFilteredPets([...pets])
     }
