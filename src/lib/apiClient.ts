@@ -3,7 +3,7 @@ import axios from 'axios'
 const BASE_URL = 'https://tamagotchiapi.onrender.com'
 // 'http://192.168.0.241:5000'
 // For Local Use
-// 'http://localhost:5000'
+// 'http://localhost:5001'
 
 // Generate or load visitorId (example using localStorage)
 function getOrCreateVisitorId() {
