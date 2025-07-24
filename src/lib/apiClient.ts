@@ -1,9 +1,17 @@
 import axios from 'axios'
+// URLS
+const URLs = {
+  // production
+  0: 'https://tamagotchiapi.onrender.com',
+  // local network
+  1: 'http://192.168.0.241:5000',
+  // local dev
+  2: 'http://localhost:5001',
+}
 
-const BASE_URL = 'https://tamagotchiapi.onrender.com'
-// 'http://192.168.0.241:5000'
-// For Local Use
-// 'http://localhost:5001'
+const ENV = 0
+
+const BASE_URL = URLs[ENV]
 
 // Generate or load visitorId (example using localStorage)
 function getOrCreateVisitorId() {
