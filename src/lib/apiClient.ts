@@ -13,25 +13,25 @@ const ENV = 0
 
 const BASE_URL = URLs[ENV]
 
-// Generate or load visitorId (example using localStorage)
+// Generate or load VisitorId (example using localStorage)
 function getOrCreateVisitorId() {
-  let visitorId = localStorage.getItem('visitorId')
-  if (!visitorId) {
-    visitorId = crypto.randomUUID()
-    localStorage.setItem('visitorId', visitorId)
+  let VisitorId = localStorage.getItem('VisitorId')
+  if (!VisitorId) {
+    VisitorId = crypto.randomUUID()
+    localStorage.setItem('VisitorId', VisitorId)
   }
-  return visitorId
+  return VisitorId
 }
 
-const visitorId = getOrCreateVisitorId()
+const VisitorId = getOrCreateVisitorId()
 
-// Create an axios instance with visitorId header
+// Create an axios instance with VisitorId header
 const apiClient = axios.create({
   baseURL: `${BASE_URL}`,
 })
 
 apiClient.interceptors.request.use((config) => {
-  config.headers['x-visitor-id'] = visitorId
+  config.headers['x-visitor-id'] = VisitorId
   return config
 })
 
