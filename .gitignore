@@ -8,3 +8,4 @@ scratchpad.md
 /src/alignmentTools.css
 # Local Netlify folder
 .netlify
+.env
