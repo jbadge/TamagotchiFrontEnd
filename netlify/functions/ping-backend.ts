@@ -5,7 +5,7 @@ export const config = {
 
 export const handler = async () => {
   try {
-    const backend = await fetch('https://tamagotchiapi.onrender.com')
+    const backend = await fetch('https://tamagotchiapi.onrender.com/health')
     const result = await backend.text()
 
     await fetch('https://dyjdknbposuimhotcaza.supabase.co/rest/v1/rpc/ping', {
