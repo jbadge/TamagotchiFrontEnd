@@ -11,6 +11,7 @@ export type PetType = {
   scoldings: number[] | undefined
   spriteUrl: string
   imageUrl: string
+  visitorId?: string
 }
 
 export type PetProps = {
@@ -30,4 +31,10 @@ export const EmptyPet: PetType = {
   scoldings: undefined,
   spriteUrl: '',
   imageUrl: '',
+  visitorId: '',
+}
+
+export type VisitorInfo = {
+  visitorId: string
+  isAdmin: boolean
 }

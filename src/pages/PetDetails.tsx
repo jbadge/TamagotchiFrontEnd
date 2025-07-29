@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useDeletePet from '../hooks/useDeletePet'
 import useLoadPet from '../hooks/useLoadPet'
@@ -6,10 +6,12 @@ import usePlaytime from '../hooks/usePlaytime'
 import useFeeding from '../hooks/useFeeding'
 import useScolding from '../hooks/useScolding'
 import useUpdatePet from '../hooks/useUpdatePet'
+import useVisitorInfo from '../hooks/useVisitorInfo'
 
 const PetDetails = () => {
   const { id } = useParams() as { id: string }
   const { pet, isPetLoading, refetchPet } = useLoadPet(id)
+  const { visitorId, isAdmin } = useVisitorInfo()
   const date = new Date(pet.birthday)
 
   const deleteMutation = useDeletePet(id)
@@ -18,13 +20,16 @@ const PetDetails = () => {
   const scoldingMutation = useScolding(id)
   const updatingMutation = useUpdatePet(id)
 
-  const [attemptFeeding, setAttemptFeeding] = React.useState(false)
+  const [attemptFeeding, setAttemptFeeding] = useState(false)
 
-  const bannerRef = React.useRef<HTMLDivElement>(null)
-  const imageRef = React.useRef<HTMLImageElement>(null)
-  const [bannerLeft, setBannerLeft] = React.useState<string>('50%')
-  const [bannerTop, setBannerTop] = React.useState<string>('0')
-  const [rotation, setRotation] = React.useState<number>(0)
+  const bannerRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+  const [bannerLeft, setBannerLeft] = useState<string>('50%')
+  const [bannerTop, setBannerTop] = useState<string>('0')
+  const [rotation, setRotation] = useState<number>(0)
+
+  const canDelete =
+    (pet.visitorId !== null && pet.visitorId === visitorId) || isAdmin
 
   // Play Button
   const handlePlayClick = async () => {
@@ -70,6 +75,16 @@ const PetDetails = () => {
     }
   }
 
+  // Delete Button
+  const handleDeleteClick = () => {
+    if (!canDelete) {
+      alert("You can't delete this pet.")
+      return
+    }
+
+    deleteMutation.mutate()
+  }
+
   // Deceased Banner
   const handleImageLoad = () => {
     if (imageRef.current && bannerRef.current) {
@@ -89,7 +104,7 @@ const PetDetails = () => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleImageLoad()
     const buttonsContainer = document.querySelector('.buttons-container')
     if (buttonsContainer) {
@@ -198,10 +213,9 @@ const PetDetails = () => {
               <div className="button-text">Delete</div>
               <button
                 id="deleted"
+                disabled={!canDelete}
                 className="bottom button"
-                onClick={function () {
-                  deleteMutation.mutate()
-                }}
+                onClick={handleDeleteClick}
               ></button>
             </div>
           </div>
