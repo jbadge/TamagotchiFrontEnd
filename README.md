@@ -11,19 +11,39 @@
 
 React.js, TypeScript, React-Router, React-Query
 
-The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a Tamagotchi virtual pet. It uses a React front-end with a C# back-end (currently not deployed). It also uses the [Poke API](https://pokeapi.co/) for fetching Pokemon images if the user chooses a Pokemon name, or random Pokemon images if the user does not specify image URLs during creation. Users can also link any non-Pokemon images to their pets during pet creation.
+The Rise of the Tamagotchi, or Tamagotchi Reloaded, is a pet database akin to a Tamagotchi virtual pet. It uses a React front-end with a C# back-end. It also uses the [Poke API](https://pokeapi.co/) for fetching Pokemon images if the user chooses a Pokemon name, or random Pokemon images if the user does not specify image URLs during creation. Users can also link any non-Pokemon images to their pets during pet creation.
 
-**Link to backend:** https://github.com/jbadge/TamagotchiAPI
+**Link to backend code:** https://github.com/jbadge/TamagotchiAPI
 
-**Link to static implementation of project:** https://tamagotchi-reloaded-jb.netlify.app/
+**Link to project:** https://tamagotchi-reloaded-jb.netlify.app/
 
 ## Optimizations
 
-I added a PUT method in order to make on-the-fly changes to pets for diagnostic purposes. I also have (currently commented out) code in order to run on external devices within a LAN, both in the frontend and backend code. Not only did this help with testing, as I did not deploy the backend codebase, but also allowed my 7 year old to have her own database, resulting in a happy 7 year old.
+A few things were tweaked to make this app run better and smoother.
+
+First, a `PUT` method was added, allowing on-the-fly changes to pets, which was helpful for diagnostics. The app initially ran purely locally because getting the backend deployed and cooperating online was proving to be a real headache, so the frontend was configured to talk to my local backend. This local setup was great for testing before the backend was even deployed, and it even let a 7-year-old have her own database, which was a definite win!
+
+To get this online properly, the C# backend was containerized. This was super important because deploying a C#/.NET backend alongside a Node.js frontend to a platform like Render without Docker would have been pretty much impossible. Now, it's happily deployed to Render, using Supabase hosting for the database.
+
+For easier troubleshooting and database management, an admin secret was also implemented. This allows seeing the entire database without limitations, which is invaluable when hunting down bugs or just checking things out.
+
+Since Render's free tier likes to spin down inactive apps, a small optimization was adding a ping mechanism. This keeps the backend awake, ensuring a smoother experience when visitors come by.
+
+Finally, to make sure everyone has their own space, the Crypto interface generates a unique browser-based ID for each visitor. This ID gets sent from the frontend to the backend, so your pets stay _your_ pets. And as a simple bit of housekeeping, there's a monthly database reset to keep things clean and prevent it from getting too big.
 
 ## Lessons Learned
 
-How to implement a full-stack application by building a backend API. After all was said and done, I was fascinated by the simplicity of the HTTP requests. Seeing it all come together after the frontend was built, with the SQL queries to the database resulting in a fun, interactive pet database, was very satisfying.
+Building this full-stack app from scratch was a rewarding experience, a real learning and problem-solving journey, starting with the backend API. It was genuinely fascinating to see the straightforwardness of HTTP requests in action. And seeing the frontend, backend, and SQL queries working together for a fun, interactive pet database was super satisfying!
+
+Initially, the app only ran locally, which worked for development. But getting the backend and database live online presented some interesting challenges. Outdated information and tricky deployment issues meant doing some real digging. After research and a little help from AI, the result was a robust, live backend and database.
+
+Here are a few things that were learned along the way:
+
+- **Navigating Free Tier Limits:** To keep the backend from "spinning down" on the free Render tier, a mechanism was implemented to actively "ping" it. This keeps it consistently active for a smoother user experience.
+- **User-Specific Data Handling:** The Crypto interface was used to generate unique browser-based IDs for each visitor. This ID is sent from the frontend to the backend, enabling interaction with the database and their own created pets.
+- **Database Maintenance:** A monthly reset is in place to keep the database from getting too cluttered, ensuring it stays clean and manageable.
+
+These experiences really highlighted the importance of being resourceful and adaptable, especially when documentation isn't up to date or you're working with platform limitations.
 
 ## Endpoints
 
@@ -54,7 +74,6 @@ During pet creation, Birthday defaults to the current DateTime, Hunger Level def
 | `POST`   | `/api/Pets/5/Scoldings` | Add a scolding to post #5, subtracting 5 from Happiness level.                       |
 
 The front-end adds two additional fields, spriteUrl and imageUrl. SpriteUrl holds the image to display on the Home screen with the list of pets. ImageUrl holds the image on the details page of the pet.
-
 
 ## Acknowledgements
 

@@ -1,28 +1,18 @@
 import apiClient from './lib/apiClient'
-// import axios from 'axios'
-// import pets from '../src/pet.json'
 import { PetType } from './types/PetsTypes'
 
 // Get all pets
 export async function getPets() {
-  // For use with API
   const response = await apiClient.get<PetType[]>(`/api/Pets/`)
 
   return response.data
-
-  // For use with pets.json
-  // return pets
 }
 
 // Get one pet
 export async function getPet(id: string) {
-  // For use with API
   const response = await apiClient.get<PetType>(`/api/Pets/${id}`)
 
   return response.data
-
-  // For use with pets.json
-  // return pets.find((pet) => pet.id === Number(id))
 }
 
 // Create a pet
@@ -82,6 +72,7 @@ export async function getVisitorInfo() {
   const response = await apiClient.get<{ visitorId: string; isAdmin: boolean }>(
     '/api/Pets/whoami'
   )
+
   return response.data
 }
 

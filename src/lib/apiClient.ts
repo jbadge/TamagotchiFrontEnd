@@ -13,7 +13,7 @@ const ENV = 0
 
 const BASE_URL = URLs[ENV]
 
-// Generate or load VisitorId (example using localStorage)
+// Generate or load VisitorId
 function getOrCreateVisitorId() {
   let VisitorId = localStorage.getItem('VisitorId')
   if (!VisitorId) {
