@@ -10,8 +10,8 @@ const URLs = {
 }
 
 const ENV = 0
-
 const BASE_URL = URLs[ENV]
+const VisitorId = getOrCreateVisitorId()
 
 // Generate or load VisitorId
 function getOrCreateVisitorId() {
@@ -22,8 +22,6 @@ function getOrCreateVisitorId() {
   }
   return VisitorId
 }
-
-const VisitorId = getOrCreateVisitorId()
 
 // Create an axios instance with VisitorId header
 const apiClient = axios.create({

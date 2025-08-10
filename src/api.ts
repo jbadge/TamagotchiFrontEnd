@@ -67,15 +67,6 @@ export async function createScolding(id: string) {
   return response.data
 }
 
-// Get visitor info (visitorId and isAdmin)
-export async function getVisitorInfo() {
-  const response = await apiClient.get<{ visitorId: string; isAdmin: boolean }>(
-    '/api/Pets/whoami'
-  )
-
-  return response.data
-}
-
 // Toggle showing dead pets
 export async function toggleItemComplete(id: string, isDead: boolean) {
   const response = await apiClient.put(`/api/Pets/${id}`, {

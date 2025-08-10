@@ -1,22 +1,28 @@
 // 10 minute ping
+import axios from 'axios'
+
 export const config = {
   schedule: '*/10 * * * *',
 }
 
 export const handler = async () => {
   try {
-    const backend = await fetch('https://tamagotchiapi.onrender.com/health')
-    const result = await backend.text()
+    const backendResponse = await axios.get(
+      'https://tamagotchiapi.onrender.com/health'
+    )
+    const result = await backendResponse.data()
 
-    await fetch('https://dyjdknbposuimhotcaza.supabase.co/rest/v1/rpc/ping', {
-      method: 'POST',
-      headers: {
-        apikey: process.env.SUPABASE_ANON_KEY!,
-        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
-        'Content-Type': 'application/json',
-      },
-      body: '{}',
-    })
+    await axios.post(
+      'https://dyjdknbposuimhotcaza.supabase.co/rest/v1/rpc/ping',
+      {},
+      {
+        headers: {
+          apikey: process.env.SUPABASE_ANON_KEY!,
+          Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
 
     console.log(`[✅ Ping Success] Backend response: ${result}`)
     return {

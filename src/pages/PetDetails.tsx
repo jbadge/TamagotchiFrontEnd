@@ -6,12 +6,10 @@ import usePlaytime from '../hooks/usePlaytime'
 import useFeeding from '../hooks/useFeeding'
 import useScolding from '../hooks/useScolding'
 import useUpdatePet from '../hooks/useUpdatePet'
-import useVisitorInfo from '../hooks/useVisitorInfo'
 
 const PetDetails = () => {
   const { id } = useParams() as { id: string }
   const { pet, isPetLoading, refetchPet } = useLoadPet(id)
-  const { visitorId, isAdmin } = useVisitorInfo()
   const date = new Date(pet.birthday)
 
   const deleteMutation = useDeletePet(id)
@@ -28,8 +26,8 @@ const PetDetails = () => {
   const [bannerTop, setBannerTop] = useState<string>('0')
   const [rotation, setRotation] = useState<number>(0)
 
-  const canDelete =
-    (pet.visitorId !== null && pet.visitorId === visitorId) || isAdmin
+  const visitorId = localStorage.getItem('visitorId') ?? ''
+  const canDelete = pet.visitorId !== null && pet.visitorId === visitorId
 
   // Play Button
   const handlePlayClick = async () => {

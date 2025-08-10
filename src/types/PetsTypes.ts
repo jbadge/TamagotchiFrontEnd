@@ -33,8 +33,3 @@ export const EmptyPet: PetType = {
   imageUrl: '',
   visitorId: '',
 }
-
-export type VisitorInfo = {
-  visitorId: string
-  isAdmin: boolean
-}
