@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query'
-import { createPlaytime } from '../api'
+import { createPlaytime } from '../api/petApi'
 import useLoadPet from './useLoadPet'
 
 const usePlaytime = (id: string) => {

@@ -1,4 +1,4 @@
-import { createPet } from '../api'
+import { createPet } from '../api/petApi'
 import useLoadPets from './useLoadPets'
 import { useMutation } from 'react-query'
 

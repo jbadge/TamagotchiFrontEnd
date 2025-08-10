@@ -1,7 +1,7 @@
 import React from 'react'
 import useCreatePet from '../hooks/useCreatePet'
 import { usePokemonNamesContext } from '../context/PokemonNamesContext'
-import { getPokemonImage, getPokemonSprite, isValidUrl } from '../otherApi'
+import { getPokemonImage, getPokemonSprite, isValidUrl } from '../api/pokeApi'
 import { EmptyPet, PetType } from '../types/PetsTypes'
 
 const CreatePetForm = () => {
@@ -36,7 +36,7 @@ const CreatePetForm = () => {
       console.log(value)
       // Set Sprite
       const foundSprite = (await getPokemonSprite(value)).picture
-console.log(foundSprite)
+      console.log(foundSprite)
       // Set Image
       const foundImage = (await getPokemonImage(value)).picture
 

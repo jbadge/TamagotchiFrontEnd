@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query'
-import { createScolding } from '../api'
+import { createScolding } from '../api/petApi'
 import useLoadPet from './useLoadPet'
 
 const useScolding = (id: string) => {

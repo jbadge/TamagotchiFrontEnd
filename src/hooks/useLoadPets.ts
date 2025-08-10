@@ -1,4 +1,4 @@
-import { getPets } from '../api'
+import { getPets } from '../api/petApi'
 import { useQuery } from 'react-query'
 
 const useLoadPets = () => {

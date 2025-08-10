@@ -1,4 +1,4 @@
-import { deletePet } from '../api'
+import { deletePet } from '../api/petApi'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router'
 

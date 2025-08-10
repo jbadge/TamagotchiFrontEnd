@@ -1,5 +1,5 @@
 import React from 'react'
-import { getAllPokemon } from '../otherApi'
+import { getAllPokemon } from '../api/pokeApi'
 
 export type PokemonNamesContextType = {
   pokemonNames: string[]

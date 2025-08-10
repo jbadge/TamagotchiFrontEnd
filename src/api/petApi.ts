@@ -1,5 +1,5 @@
-import apiClient from './lib/apiClient'
-import { PetType } from './types/PetsTypes'
+import apiClient from '../lib/apiClient'
+import { PetType } from '../types/PetsTypes'
 
 // Get all pets
 export async function getPets() {

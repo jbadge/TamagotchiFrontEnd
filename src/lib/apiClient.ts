@@ -23,7 +23,7 @@ function getOrCreateVisitorId() {
   return VisitorId
 }
 
-// Create an axios instance with VisitorId header
+// Create instance with VisitorId header
 const apiClient = axios.create({
   baseURL: `${BASE_URL}`,
 })

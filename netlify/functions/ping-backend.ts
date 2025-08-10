@@ -29,8 +29,8 @@ export const handler = async () => {
       statusCode: 200,
       body: 'Pinged backend and Supabase successfully',
     }
-  } catch (e: any) {
-    console.error('[❌ Ping failed]', e)
+  } catch (error: any) {
+    console.error('[❌ Ping failed]', error)
     return {
       statusCode: 500,
       body: 'Ping failed',

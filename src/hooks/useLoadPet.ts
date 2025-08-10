@@ -1,4 +1,4 @@
-import { getPet } from '../api'
+import { getPet } from '../api/petApi'
 import { useQuery } from 'react-query'
 import { EmptyPet } from '../types/PetsTypes'
 

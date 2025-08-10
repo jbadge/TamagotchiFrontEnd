@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query'
-import { createFeeding } from '../api'
+import { createFeeding } from '../api/petApi'
 import useLoadPet from './useLoadPet'
 
 const useFeeding = (id: string) => {
